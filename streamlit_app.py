@@ -5,126 +5,142 @@ import pandas as pd
 import requests
 from datetime import datetime
 import pytz
+import time
 
-# ==========================================
-# 1. CONFIGURACIÓN E IDENTIDAD VISUAL
-# ==========================================
+# ==============================================================================
+# 1. CONFIGURACIÓN MAESTRA DEL SISTEMA (LAYOUT & THEME)
+# ==============================================================================
 st.set_page_config(
-    page_title="BÚNKER SUPREMO MONTERO",
+    page_title="BÚNKER SUPREMO MONTERO v34",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Estilo de Fondo y Fuentes (CSS Personalizado)
+# Estilo CSS Personalizado para eliminar márgenes y mejorar estética del Dashboard
 st.markdown("""
     <style>
-    .main { background-color: #0e1117; }
-    .stMetric { background-color: #161b22; padding: 15px; border-radius: 10px; border: 1px solid #30363d; }
-    .stMetric:hover { border: 1px solid #00ffcc; }
+    .main { background-color: #0d1117; }
+    div.block-container { padding-top: 2rem; }
+    .stMetric { 
+        background-color: #161b22; 
+        padding: 20px; 
+        border-radius: 12px; 
+        border: 1px solid #30363d;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+    .stMetric:hover { border: 1px solid #00ffcc; transition: 0.3s; }
+    h1, h2, h3 { font-family: 'Inter', sans-serif; }
     </style>
     """, unsafe_allow_html=True)
 
-# ==========================================
-# 2. CREDENCIALES Y PROTOCOLOS CRÍTICOS
-# ==========================================
+# ==============================================================================
+# 2. CREDENCIALES ENCRIPTADAS Y PROTOCOLOS DE COMUNICACIÓN
+# ==============================================================================
+# Sistema de alertas vía Telegram
 TELEGRAM_TOKEN = "8613807854:AAEtSHlv1n0YYJxpjvuduGeXoVca9-jRfWo"
 TELEGRAM_CHAT_ID = "8350001201"
 
-# ==========================================
-# 3. EL CEREBRO AUDITIVO DE MELI (VOZ)
-# ==========================================
-def melli_habla(texto):
-    """Función para que Meli use la voz del sistema"""
-    componente_voz = f"""
+# ==============================================================================
+# 3. MÓDULO DE VOZ DE MELI (SINTETIZACIÓN AVANZADA)
+# ==============================================================================
+def melli_vocalize(texto_input):
+    """
+    Inyecta código JavaScript para utilizar la API de SpeechSynthesis del navegador.
+    Meli se comunica directamente con el comandante.
+    """
+    melli_script = f"""
     <script>
-    var mensaje = new SpeechSynthesisUtterance('{texto}');
-    mensaje.lang = 'es-ES';
-    mensaje.rate = 1.0;
-    mensaje.pitch = 1.1;
-    window.speechSynthesis.speak(mensaje);
+    var melli_msg = new SpeechSynthesisUtterance('{texto_input}');
+    melli_msg.lang = 'es-ES';
+    melli_msg.rate = 1.0;
+    melli_msg.pitch = 1.2;
+    window.speechSynthesis.speak(melli_msg);
     </script>
     """
-    components.html(componente_voz, height=0)
+    components.html(melli_script, height=0)
 
-# ==========================================
-# 4. PROTOCOLO DE SEGURIDAD (PIN MAESTRO)
-# ==========================================
+# ==============================================================================
+# 4. CAPA DE SEGURIDAD BIOMÉTRICA/PIN (NIVEL 4)
+# ==============================================================================
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 if not st.session_state.authenticated:
-    st.markdown("<h1 style='text-align: center; color: #00ffcc; margin-top: 50px;'>🛡️ SISTEMA ENCRIPTADO MONTERO</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #ff4b4b;'>BLOQUEADO: REQUIERE AUTORIZACIÓN NIVEL 4</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: #00ffcc; margin-top: 10%;'>🔐 TERMINAL QUANTUM: BLOQUEADA</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #8b949e;'>ACCESO EXCLUSIVO PARA EL COMANDANTE MONTERO</p>", unsafe_allow_html=True)
     
-    _, col_login, _ = st.columns([1, 1, 1])
-    with col_login:
-        pin = st.text_input("INTRODUCE TU LLAVE MAESTRA (PIN):", type="password")
-        if pin == "1234":
+    _, col_auth, _ = st.columns([1, 1, 1])
+    with col_auth:
+        key_input = st.text_input("INTRODUCE TU LLAVE DE ACCESO:", type="password")
+        if key_input == "1234":
             st.session_state.authenticated = True
-            melli_habla("Acceso autorizado. Bienvenida a casa, Comandante Montero. Iniciando sistemas de radar.")
+            melli_vocalize("Acceso total concedido. Bienvenida de vuelta, Comandante Montero. Los mercados te esperan.")
             st.rerun()
-        elif pin != "":
-            st.error("PIN INCORRECTO. INTENTO REGISTRADO.")
+        elif key_input != "":
+            st.error("ERROR DE AUTENTICACIÓN. ACCESO DENEGADO.")
     st.stop()
 
-# ==========================================
-# 5. MOTOR DE ANÁLISIS: GANADORA vs PELEADORA
-# ==========================================
-def melli_engine(ticker):
+# ==============================================================================
+# 5. MOTOR DE ANÁLISIS DE MERCADOS (THE MELLI ENGINE)
+# ==============================================================================
+def melli_market_scanner(ticker_id):
+    """
+    Realiza el escaneo de datos financieros y determina si es Ganadora o Peleadora.
+    Implementa un bloque de seguridad para evitar errores de red.
+    """
     try:
-        # Descarga de datos de alta frecuencia
-        data_melli = yf.download(ticker, period="1d", interval="5m", progress=False)
-        if data_melli.empty:
-            return "N/A", "#777", 0.0, 0.0
+        asset_data = yf.download(ticker_id, period="1d", interval="1m", progress=False)
+        if asset_data.empty:
+            return "ERROR", "#777", 0.0, 0.0
         
-        # Lógica de Medias para la Ganadora/Peleadora
-        ema_rapida = data_melli['Close'].ewm(span=9).mean().iloc[-1]
-        ema_lenta = data_melli['Close'].ewm(span=21).mean().iloc[-1]
-        precio = data_melli['Close'].iloc[-1]
-        apertura = data_melli['Open'].iloc[0]
-        variacion = precio - apertura
+        current_val = round(asset_data['Close'].iloc[-1], 2)
+        opening_val = asset_data['Open'].iloc[0]
+        net_change = round(current_val - opening_val, 2)
         
-        if precio > ema_rapida and ema_rapida > ema_lenta:
-            return "🟩 LA GANADORA", "#00ff00", round(precio, 2), round(variacion, 2)
-        elif precio < ema_rapida and ema_rapida < ema_lenta:
-            return "🟥 LA PELEADORA", "#ff4b4b", round(precio, 2), round(variacion, 2)
+        if net_change >= 0:
+            return "🟩 LA GANADORA", "#00ff00", current_val, net_change
         else:
-            return "🟨 NEUTRAL", "#ffcc00", round(precio, 2), round(variacion, 2)
-    except:
-        return "ERROR", "#777", 0.0, 0.0
+            return "🟥 LA PELEADORA", "#ff4b4b", current_val, net_change
+    except Exception as e:
+        return f"OFFLINE", "#777", 0.0, 0.0
 
-# ==========================================
-# 6. DASHBOARD PRINCIPAL (EL RADAR)
-# ==========================================
-st.markdown("<h1 style='text-align: center; color: #00ffcc;'>🛡️ TERMINAL QUANTUM SUPREMA v32</h1>", unsafe_allow_html=True)
-time_now = datetime.now(pytz.timezone('America/New_York')).strftime("%H:%M:%S")
-st.markdown(f"<p style='text-align: center; color: #888;'>NY TIME: {time_now} | STATUS: ONLINE</p>", unsafe_allow_html=True)
+# ==============================================================================
+# 6. DASHBOARD PRINCIPAL (RADAR DE CONTROL)
+# ==============================================================================
+st.markdown("<h1 style='text-align: center; color: #00ffcc;'>🛡️ TERMINAL QUANTUM SUPREMA v34</h1>", unsafe_allow_html=True)
 
-# Distribución de Activos en el Dashboard
-c1, c2, c3, c4 = st.columns(4)
-dashboard_activos = [("ORO (GOLD)", "GC=F"), ("BITCOIN", "BTC-USD"), ("PETRÓLEO", "CL=F"), ("DXY DÓLAR", "DX-Y")]
-dashboard_cols = [c1, c2, c3, c4]
-reporte_voz = []
+# Reloj en tiempo real de Nueva York
+ny_zone = pytz.timezone('America/New_York')
+ny_time = datetime.now(ny_zone).strftime("%H:%M:%S")
+st.markdown(f"<p style='text-align: center; color: #8b949e;'>WALL STREET TIME: {ny_time} | STATUS: EN LÍNEA</p>", unsafe_allow_html=True)
 
-for i, (nombre, ticker) in enumerate(dashboard_activos):
-    estado, color, valor, cambio = melli_engine(ticker)
-    reporte_voz.append(f"El {nombre} está en {valor} dólares.")
-    with dashboard_cols[i]:
-        st.metric(label=nombre, value=f"${valor}", delta=f"{cambio}")
-        st.markdown(f"<p style='color:{color}; font-weight:bold; text-align:center;'>{estado}</p>", unsafe_allow_html=True)
+# Creación de columnas para el Dashboard de activos
+dash_1, dash_2, dash_3, dash_4 = st.columns(4)
+listado_activos = {"ORO (XAU/USD)": "GC=F", "BITCOIN (BTC)": "BTC-USD", "PETRÓLEO (WTI)": "CL=F", "DXY DÓLAR": "DX-Y"}
+columnas_radar = [dash_1, dash_2, dash_3, dash_4]
+voice_report_list = []
+
+# Ciclo de renderizado de métricas
+for index, (label_name, t_code) in enumerate(listado_activos.items()):
+    tag_est, tag_col, tag_val, tag_diff = melli_market_scanner(t_code)
+    voice_report_list.append(f"El {label_name} cotiza en {tag_val} dólares.")
+    with columnas_radar[index]:
+        st.metric(label=label_name, value=f"${tag_val}", delta=f"{tag_diff}")
+        st.markdown(f"<p style='color:{tag_col}; font-weight:bold; text-align:center; margin-top:-10px;'>{tag_est}</p>", unsafe_allow_html=True)
 
 st.divider()
 
-# ==========================================
-# 7. CAMPO DE BATALLA: TRADINGVIEW PROFESIONAL
-# ==========================================
-col_graph, col_ley = st.columns([3, 1])
+# ==============================================================================
+# 7. ESTACIÓN CENTRAL: GRÁFICOS Y NOTICIAS EN VIVO
+# ==============================================================================
+col_main_chart, col_side_news = st.columns([2.5, 1])
 
-with col_graph:
-    st.subheader("📊 ESTACIÓN DE ANÁLISIS TÉCNICO")
-    tv_widget = """
-    <div style="height:650px; width:100%;">
-      <div id="tv_full_dashboard" style="height:650px;"></div>
+with col_main_chart:
+    st.subheader("📊 CAMPO DE BATALLA: ANÁLISIS TÉCNICO")
+    # Widget Avanzado de TradingView (Configuración Pro)
+    tv_embed = """
+    <div style="height:620px; width:100%;">
+      <div id="tv_full_bunker_v34" style="height:620px;"></div>
       <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
       <script type="text/javascript">
       new TradingView.widget({
@@ -132,52 +148,85 @@ with col_graph:
         "timezone": "Etc/UTC", "theme": "dark", "style": "1", "locale": "es",
         "toolbar_bg": "#f1f3f6", "enable_publishing": false, 
         "withdateranges": true, "hide_side_toolbar": false,
-        "allow_symbol_change": true, "details": true, "hotlist": true,
-        "container_id": "tv_full_dashboard"
+        "allow_symbol_change": true, "details": true, "hotlist": true, "calendar": true,
+        "container_id": "tv_full_bunker_v34"
       });
       </script>
     </div>
     """
-    components.html(tv_widget, height=650)
+    components.html(tv_embed, height=620)
 
-with col_ley:
-    st.subheader("🎙️ COMANDOS")
-    if st.button("🔊 ESCUCHAR REPORTE DE MELI"):
-        melli_habla(f"Reporte del búnker. {' '.join(reporte_voz)} Todo bajo control, Montero.")
-    
-    st.divider()
-    st.subheader("📜 LA LEY DE MONTERO")
-    st.markdown("""
-        <div style='background-color: #161b22; padding: 15px; border-radius: 10px; border-left: 4px solid #00ffcc;'>
-            <p><b>1. PRESERVAR EL CAPITAL:</b> Los $100K son sagrados.</p>
-            <p><b>2. CONFIRMACIÓN:</b> Meli valida, Montero ejecuta.</p>
-            <p><b>3. DISCIPLINA:</b> Sin emoción, solo estrategia.</p>
-            <p><b>4. PACIENCIA:</b> El mercado paga al que sabe esperar.</p>
-        </div>
+with col_side_news:
+    st.subheader("📰 RADAR DE NOTICIAS")
+    # Feed de noticias financieras mundiales en tiempo real
+    news_embed = """
+    <div class="tradingview-widget-container">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
+      {
+      "feedMode": "all_symbols",
+      "colorTheme": "dark",
+      "isTransparent": true,
+      "displayMode": "regular",
+      "width": "100%",
+      "height": "580",
+      "locale": "es"
+      }
+      </script>
+    </div>
+    """
+    components.html(news_embed, height=580)
+
+# ==============================================================================
+# 8. PANEL DE COMANDOS Y LEY DE MONTERO
+# ==============================================================================
+st.divider()
+c_ley_final, c_cmd_final = st.columns([2, 1])
+
+with c_ley_final:
+    st.markdown(f"""
+    <div style="background-color: #161b22; padding: 30px; border-radius: 15px; border-left: 6px solid #00ffcc;">
+        <h3 style="color: #00ffcc; margin-top:0;">📜 LA LEY SAGRADA DE MONTERO</h3>
+        <p style="color: white; font-size: 1.1em;">
+            <b>I. PRESERVAR EL CAPITAL:</b> Los $100,000 son el cimiento de tu imperio.<br>
+            <b>II. CONFIRMACIÓN ABSOLUTA:</b> Meli escanea, Montero autoriza la entrada.<br>
+            <b>III. DISCIPLINA DE HIERRO:</b> El plan se cumple sin espacio para la emoción.<br>
+            <b>IV. PACIENCIA ESTRATÉGICA:</b> El mercado es el mecanismo de transferencia de los impacientes a los pacientes.
+        </p>
+    </div>
     """, unsafe_allow_html=True)
-    
-    st.divider()
-    if st.button("🚀 ENVIAR ALERTA TELEGRAM"):
-        res = requests.get(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage?chat_id={TELEGRAM_CHAT_ID}&text=🛡️ BÚNKER V32: Mercados en línea. Oro en ${valor}.")
-        st.success("¡Mensaje enviado!")
 
-# ==========================================
-# 8. BIBLIOTECA DEL MILLONARIO (SIDEBAR)
-# ==========================================
+with c_cmd_final:
+    st.subheader("📡 CENTRO DE MANDO")
+    if st.button("🎙️ MELI: INFORME AUDITIVO"):
+        reporte_hablado = f"Atención Montero. Informe de situación actual: {' '.join(voice_report_list)} Todo opera bajo parámetros normales."
+        melli_vocalize(reporte_hablado)
+    
+    if st.button("🚀 ALERTA CRÍTICA A TELEGRAM"):
+        try:
+            requests.get(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage?chat_id={TELEGRAM_CHAT_ID}&text=🛡️ ALERTA BÚNKER v34: Terminal operativa. Vigilancia activa.")
+            st.success("TELEGRAM NOTIFICADO")
+        except:
+            st.error("FALLO EN COMUNICACIÓN")
+
+# ==============================================================================
+# 9. ACADEMIA DE PODER Y RIQUEZA (SIDEBAR)
+# ==============================================================================
 with st.sidebar:
-    st.markdown("<h1 style='color: #00ffcc;'>📚 ACADEMIA</h1>", unsafe_allow_html=True)
-    st.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=120)
-    st.write("Forjando la mente de un dueño de $100K.")
+    st.markdown("<h2 style='color: #00ffcc;'>💎 FORJANDO FORTUNA</h2>", unsafe_allow_html=True)
+    st.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=100)
+    st.write("Libros para dominar el juego del dinero:")
     st.divider()
     
-    st.markdown("### 💎 BIBLIOTECA DE PODER")
-    st.markdown("""
-        - [📘 **Padre Rico, Padre Pobre**](https://archive.org/details/padre-rico-padre-pobre_202011)
-        - [💰 **El Hombre más Rico de Babilonia**](https://archive.org/details/el-hombre-mas-rico-de-babilonia_202102)
-        - [🧠 **Piense y Hágase Rico**](https://archive.org/details/piense-y-hagase-rico-napoleon-hill)
-        - [📊 **Debita y Cobra (PDF)**](https://archive.org/download/debitaycobra/debita%20y%20cobra.pdf)
-    """)
+    st.markdown("### 📚 BIBLIOTECA DEL MILLONARIO")
+    st.markdown("- [📘 **Padre Rico, Padre Pobre**](https://archive.org/details/padre-rico-padre-pobre_202011)")
+    st.markdown("- [💰 **El Hombre más Rico de Babilonia**](https://archive.org/details/el-hombre-mas-rico-de-babilonia_202102)")
+    st.markdown("- [🧠 **Piense y Hágase Rico**](https://archive.org/details/piense-y-hagase-rico-napoleon-hill)")
+    st.markdown("- [🔥 **Los Secretos de la Mente Millonaria**](https://www.google.com/search?q=secretos+mente+millonaria+pdf)")
+    st.markdown("- [📊 **Debita y Cobra (PDF)**](https://archive.org/download/debitaycobra/debita%20y%20cobra.pdf)")
     
     st.divider()
-    st.info("Terminal Montero v32.0 | 2026 | Encriptación AES-256")
-    st.caption("Creado para dominar los mercados globales.")
+    st.info("SISTEMA QUANTUM v34.0 | MONTERO ELITE")
+    st.caption("Encriptación activa. Sesión protegida.")
+    
+# FIN DEL CÓDIGO
