@@ -13,7 +13,7 @@ st.set_page_config(page_title="MELI TOTAL COMMAND v18", layout="wide", initial_s
 st_autorefresh(interval=30000, key="global_refresh")
 
 # CREDENCIALES MONTERO (YA INTEGRADAS)
-TELEGRAM_TOKEN = "8613807854:AAETsHlv1n0YYJxpjvuduGeXoVca9-jRfWo
+TELEGRAM_TOKEN = "8613807854":AAETsHlv1n0YYJxpjvuduGeXoVca9-jRfWo
 TELEGRAM_CHAT_ID = "8350001201"
 
 # --- 2. EL CEREBRO DE TELEGRAM (ESCUCHA Y RESPUESTA) ---
