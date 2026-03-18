@@ -2503,18 +2503,21 @@ def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
 # ==============================================================================
-# 🏁 IGNICIÓN FINAL: LANZANDO EL ACORAZADO MONTERO
+# 🏁 CIERRE TOTAL DEL ACORAZADO MONTERO
 # ==============================================================================
 if __name__ == "__main__":
+    import streamlit as st
     try:
-        import streamlit as st
-        
-        # 1. Confirmación de conexión
-        st.success("✅ SISTEMA MONTERO v53.5 CONECTADO")
-        
-        # 2. LLAMADA AL CORAZÓN DEL PROGRAMA (La que encontraste)
+        # Intentamos arrancar la función principal
+        # Asegúrate de que NO tenga espacios antes del nombre
         EJECUTAR_SYSTEMA_MONTERO()
         
+    except NameError:
+        # SI FALLA EL NOMBRE, USAMOS EL PLAN B:
+        # Buscamos la función en el listado global del programa
+        if 'EJECUTAR_SYSTEMA_MONTERO' in globals():
+            globals()['EJECUTAR_SYSTEMA_MONTERO']()
+        else:
+            st.error("❌ Error de Definición: La función 'EJECUTAR_SYSTEMA_MONTERO' no existe o está mal escrita (revisa la 'Y').")
     except Exception as e:
-        import streamlit as st
-        st.error(f"⚠️ Error al desplegar la interfaz: {e}")
+        st.error(f"⚠️ Error al lanzar el sistema: {e}")
