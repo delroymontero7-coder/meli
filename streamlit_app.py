@@ -2525,22 +2525,25 @@ if __name__ == "__main__":
                 st.rerun()
             else:
                 st.error("❌ CLAVE INCORRECTA. El Acorazado permanece bloqueado.")
-    else:
-        # 3. INTERIOR DEL BÚNKER (SISTEMA COMPLETO)
-      time.sleep(1)
-      st.rerun()
+    if password == "Quantum2026":
+                st.session_state.autenticado = True
+                st.success("✅ ACCESO CONCEDIDO. Cargando Academia...")
+                time.sleep(1)
+                st.rerun()
             else:
                 st.error("❌ CLAVE INCORRECTA")
 
+    # 3. INTERIOR DEL BÚNKER (SISTEMA COMPLETO)
     else:
-        # 3. INTERIOR DEL BÚNKER (SISTEMA COMPLETO)
         try:
-            # Aquí llamamos a la función de tu línea 73
+            # Esta es la llave que vimos en la línea 73
             mostrar_interfaz_acorazado() 
             
-            # Refresco automático cada 60 segundos
-            import time
+            # Motor de refresco (60 segundos)
             time.sleep(60)
+            st.rerun()
+        except Exception as e:
+            st.error(f"⚠️ Error en el Puente de Mando: {e}")
             st.rerun()
             
         except Exception as e:
