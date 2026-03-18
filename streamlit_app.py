@@ -2503,14 +2503,18 @@ def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
 # ==============================================================================
-# 🚀 ARRANQUE LIMPIO DEL ACORAZADO (Línea 2,505+)
+# 🏁 IGNICIÓN FINAL: LANZANDO EL ACORAZADO MONTERO
 # ==============================================================================
 if __name__ == "__main__":
-    import streamlit as st
-    
-    # Esto aparecerá en la web para confirmarte que el código cargó bien
-    st.success("✅ SISTEMA MONTERO v53.5 CONECTADO")
-    
-    # Aquí NO llamamos a main(), dejamos que el código de arriba
-    # se ejecute solo, tal como lo tienes diseñado.
-    print("El Búnker está respirando...")
+    try:
+        import streamlit as st
+        
+        # 1. Confirmación de conexión
+        st.success("✅ SISTEMA MONTERO v53.5 CONECTADO")
+        
+        # 2. LLAMADA AL CORAZÓN DEL PROGRAMA (La que encontraste)
+        EJECUTAR_SYSTEMA_MONTERO()
+        
+    except Exception as e:
+        import streamlit as st
+        st.error(f"⚠️ Error al desplegar la interfaz: {e}")
