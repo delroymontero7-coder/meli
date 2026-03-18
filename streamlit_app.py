@@ -2505,7 +2505,7 @@ def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO
 # ==============================================================================
 # 🚀 ARRANQUE LIMPIO DEL ACORAZADO (Línea 2,505+)
 # ==============================================================================
-if _name_ == "_main_":
+if __name__ == "__main__":
     import streamlit as st
     
     # Esto aparecerá en la web para confirmarte que el código cargó bien
