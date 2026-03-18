@@ -2503,18 +2503,14 @@ def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
 # ==============================================================================
-# 🚀 IGNICIÓN FINAL DEL ACORAZADO MONTERO
+# 🚀 ARRANQUE LIMPIO DEL ACORAZADO (Línea 2,505+)
 # ==============================================================================
-if __name__ == "__main__":
-    try:
-        # En lugar de buscar una función 'main', lanzamos el búnker directamente
-        # Si tienes una variable que instancia el búnker, úsala aquí.
-        # Si no, simplemente deja que Streamlit termine de cargar.
-        print("Acorazado Montero v53.5: Operativo y en línea.")
-    except Exception as e:
-        import streamlit as st
-        st.error(f"❌ Error crítico en el despliegue: {e}")
-        
-    except Exception as e:
-        st.error(f"⚠️ ERROR CRÍTICO EN EL ARRANQUE: {str(e)}")
-        print(f"FALLO DE MOTOR: {e}")
+if _name_ == "_main_":
+    import streamlit as st
+    
+    # Esto aparecerá en la web para confirmarte que el código cargó bien
+    st.success("✅ SISTEMA MONTERO v53.5 CONECTADO")
+    
+    # Aquí NO llamamos a main(), dejamos que el código de arriba
+    # se ejecute solo, tal como lo tienes diseñado.
+    print("El Búnker está respirando...")
