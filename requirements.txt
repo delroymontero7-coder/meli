@@ -1,7 +1,8 @@
 streamlit
-yfinance
 pandas
+yfinance
+numpy
+plotly
 requests
 pytz
 streamlit-autorefresh
-plotly
