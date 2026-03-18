@@ -1,7 +1,7 @@
 streamlit
 pandas
-yfinance
-numpy
-plotly
 pandas_ta
-
+numpy
+datetime
+requests
+git+https://github.com/monstermonster/tvdatafeed.git
