@@ -2503,45 +2503,33 @@ def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
 # ==============================================================================
-# ⚓ RESTAURACIÓN TOTAL DEL PANEL MONTERO
+# ⚓ MOTOR DE ARRANQUE Y AUTO-REFRESH DEL ACORAZADO MONTERO
 # ==============================================================================
 
-def EJECUTAR_SISTEMA_MONTERO():
+if __name__ == "__main__":
     import streamlit as st
-    import yfinance as yf
-    
-    # --- CONFIGURACIÓN DE PÁGINA ---
-    # Esto fuerza a que el menú lateral esté visible
-    st.set_page_config(page_title="ACORAZADO MONTERO", layout="wide")
+    import time
+    from datetime import datetime
 
-    # --- BARRA LATERAL (Donde estaba tu Academia y Noticias) ---
-    with st.sidebar:
-        st.image("https://cdn-icons-png.flaticon.com/512/2534/2534125.png", width=100)
-        st.title("🛡️ CONTROL DE MANDO")
-        
-        # Aquí es donde eliges a qué sección ir
-        menu = st.radio("IR A:", ["🔐 Login/Panel", "📊 Trading Real-Time", "📰 Noticias", "🎓 Academia"])
+    # 1. Función de Refresco Automático (60 segundos)
+    # Esto hace que el radar se mueva solo como lo tenías antes
+    if 'last_refresh' not in st.session_state:
+        st.session_state.last_refresh = datetime.now()
 
-    # --- LÓGICA DE NAVEGACIÓN ---
-    if menu == "🔐 Login/Panel":
-        st.title("⚓ ACCESO AL ACORAZADO")
-        password = st.text_input("Introduce tu clave de acceso:", type="password")
-        if password == "TU_CLAVE_AQUI": # Pon aquí tu clave real
-            st.success("Bienvenido, Capitán.")
-            # Aquí llamaríamos a la función que muestra tu panel
+    # 2. Intentar lanzar el Sistema Completo (Login, Academia, Noticias)
+    try:
+        # Ejecutamos tu función principal que contiene todo el menú
+        EJECUTAR_SISTEMA_MONTERO()
         
-    elif menu == "📊 Trading Real-Time":
-        st.header("📈 Gráficos y Acción de Precio")
-        # Aquí es donde pusimos antes lo de Yahoo Finance
-        
-    elif menu == "📰 Noticias":
-        st.header("🌍 Noticias del Mercado")
-        # Aquí iría tu bloque de noticias
-        
-    elif menu == "🎓 Academia":
-        st.header("📚 Academia Montero")
-        # Aquí iría tu bloque de formación
+        # 3. Lógica del Temporizador (Auto-Refresh)
+        # Espera 60 segundos y vuelve a cargar para actualizar velas
+        time.sleep(60)
+        st.rerun()
 
+    except NameError:
+        st.error("❌ Error: No se encuentra la función 'EJECUTAR_SISTEMA_MONTERO'. Revisa el nombre en la línea 73.")
+    except Exception as e:
+        st.error(f"⚠️ Error en el Puente de Mando: {e}")
 # --- ARRANQUE ---
 if _name_ == "_main_":
     EJECUTAR_SISTEMA_MONTERO()
