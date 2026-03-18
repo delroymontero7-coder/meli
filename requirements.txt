@@ -4,4 +4,4 @@ yfinance
 numpy
 plotly
 pandas_ta
-streamlit-autorefresh
+
