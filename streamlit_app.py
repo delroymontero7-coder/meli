@@ -2503,39 +2503,45 @@ def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
 # ==============================================================================
-# 🏁 CONEXIÓN FINAL CON YAHOO FINANCE - EL ACORAZADO
+# ⚓ RESTAURACIÓN TOTAL DEL PANEL MONTERO
 # ==============================================================================
 
 def EJECUTAR_SISTEMA_MONTERO():
     import streamlit as st
     import yfinance as yf
-    from datetime import datetime
     
-    # 1. Título e información de estado
-    st.title("⚓ MONTERO v53.5 | EL ACORAZADO INSTITUCIONAL")
-    st.info(f"🔄 Radar operativo - Última actualización: {datetime.now().strftime('%H:%M:%S')}")
+    # --- CONFIGURACIÓN DE PÁGINA ---
+    # Esto fuerza a que el menú lateral esté visible
+    st.set_page_config(page_title="ACORAZADO MONTERO", layout="wide")
 
-    try:
-        # 2. Descarga de datos automática
-        with st.spinner('⚓ Descargando datos de mercado...'):
-            # Usamos BTC-USD por defecto, puedes cambiarlo luego en el menú
-            df_mercado = yf.download(tickers='BTC-USD', period='1d', interval='5m')
-            
-        if not df_mercado.empty:
-            st.success("✅ SEÑAL RECIBIDA: Yahoo Finance Conectado")
-            # AQUÍ ES DONDE TUS 2,500 LÍNEAS DE SMC ENTRAN EN ACCIÓN
-            # El sistema usará 'df_mercado' para buscar los Order Blocks
-        else:
-            st.warning("⚠️ Sin señal: Yahoo Finance no devolvió datos.")
-            
-    except Exception as e:
-        st.error(f"❌ Error de Radar: {e}")
+    # --- BARRA LATERAL (Donde estaba tu Academia y Noticias) ---
+    with st.sidebar:
+        st.image("https://cdn-icons-png.flaticon.com/512/2534/2534125.png", width=100)
+        st.title("🛡️ CONTROL DE MANDO")
+        
+        # Aquí es donde eliges a qué sección ir
+        menu = st.radio("IR A:", ["🔐 Login/Panel", "📊 Trading Real-Time", "📰 Noticias", "🎓 Academia"])
 
-# --- ARRANQUE DEL SISTEMA ---
-if __name__ == "__main__":
-    try:
-        EJECUTAR_SISTEMA_MONTERO()
-    except Exception as e:
-        import streamlit as st
-        st.error(f"⚠️ Error al lanzar el sistema: {e}")
+    # --- LÓGICA DE NAVEGACIÓN ---
+    if menu == "🔐 Login/Panel":
+        st.title("⚓ ACCESO AL ACORAZADO")
+        password = st.text_input("Introduce tu clave de acceso:", type="password")
+        if password == "TU_CLAVE_AQUI": # Pon aquí tu clave real
+            st.success("Bienvenido, Capitán.")
+            # Aquí llamaríamos a la función que muestra tu panel
+        
+    elif menu == "📊 Trading Real-Time":
+        st.header("📈 Gráficos y Acción de Precio")
+        # Aquí es donde pusimos antes lo de Yahoo Finance
+        
+    elif menu == "📰 Noticias":
+        st.header("🌍 Noticias del Mercado")
+        # Aquí iría tu bloque de noticias
+        
+    elif menu == "🎓 Academia":
+        st.header("📚 Academia Montero")
+        # Aquí iría tu bloque de formación
 
+# --- ARRANQUE ---
+if _name_ == "_main_":
+    EJECUTAR_SISTEMA_MONTERO()
