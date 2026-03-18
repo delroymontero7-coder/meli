@@ -1,9 +1,3 @@
-# ==============================================================================
-# SISTEMA DE ARMAMENTO PESADO "BÚNKER MONTERO" v53.5
-# BLOQUE 1 DE 5: INFRAESTRUCTURA TOTAL Y MOTORES MATEMÁTICOS MANUALES
-# TOTAL DE LÍNEAS DE ESTE SEGMENTO: 500 (AUDITORÍA COMPLETA)
-# ==============================================================================
-
 import streamlit as st
 import pandas as pd
 import yfinance as yf
@@ -2529,7 +2523,7 @@ if __name__ == "__main__":
                 st.success("✅ ACCESO CONCEDIDO. Cargando Academia y Noticias...")
                 time.sleep(1)
                 st.rerun()
-            else:
+             else:
                 st.error("❌ CLAVE INCORRECTA. El Acorazado permanece bloqueado.")
     
     else:
