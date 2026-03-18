@@ -15,12 +15,12 @@ import json
 st.set_page_config(page_title="🛡️ BÚNKER MONTERO v53.5", layout="wide", initial_sidebar_state="expanded")
 
 # --- LLAVE MAESTRA ---
+# --- LLAVE MAESTRA CORREGIDA ---
 if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
 
 if not st.session_state.autenticado:
     st.markdown("<h1 style='text-align: center; color: #00ff41;'>⚓ ACORAZADO MONTERO</h1>", unsafe_allow_html=True)
-    # Importante: 'key' evita que la clave se borre al procesar el botón
     password = st.text_input("PASSWORD DE MANDO:", type="password", key="main_pass")
     if st.button("🔓 ACTIVAR SISTEMAS"):
         if password == "Quantum2026":
@@ -28,14 +28,9 @@ if not st.session_state.autenticado:
             st.rerun()
         else:
             st.error("❌ DENEGADO")
-    st.stop() # EL MURO DE SEGURIDAD
+    # EL CAMBIO: Ahora el stop solo frena a los que NO están logueados
+    st.stop() 
 # --- FIN LLAVE MAESTRA ---
-# De aquí para abajo, TODO tu código original se ejecutará solo 
-# una vez que la clave sea correcta.
-# ------------------------------------------------------------------------------
-# 1.0 CAPA DE PRESENTACIÓN INSTITUCIONAL (UI/UX KERNEL)
-# ------------------------------------------------------------------------------
-
 # Estilo Neón de Alta Densidad (CSS Expandido para Robustez)
 st.markdown("""
     <style>
