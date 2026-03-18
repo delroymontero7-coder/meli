@@ -2523,7 +2523,7 @@ if __name__ == "__main__":
                 st.success("✅ ACCESO CONCEDIDO. Cargando Academia y Noticias...")
                 time.sleep(1)
                 st.rerun()
-             else:
+            else:
                 st.error("❌ CLAVE INCORRECTA. El Acorazado permanece bloqueado.")
     
     else:
