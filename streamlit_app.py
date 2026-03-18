@@ -34,7 +34,7 @@ if not st.session_state.autenticado:
             st.rerun()
         else:
             st.error("❌ ACCESO DENEGADO")
-  st.stop() # <--- ESTO ES LO MÁS IMPORTANTE: Detiene todo si no hay clave.
+    st.stop() # <--- ESTO ES LO MÁS IMPORTANTE: Detiene todo si no hay clave.
 # --- FIN DE LA LLAVE MAESTRA ---
 
 # De aquí para abajo, TODO tu código original se ejecutará solo 
