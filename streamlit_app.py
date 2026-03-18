@@ -2503,33 +2503,44 @@ def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
 # ==============================================================================
-# ⚓ MOTOR DE ARRANQUE Y AUTO-REFRESH DEL ACORAZADO MONTERO
+# 🛡️ LOGIN DE PANTALLA COMPLETA + AUTO-REFRESH MONTERO
 # ==============================================================================
 
 if __name__ == "__main__":
     import streamlit as st
     import time
-    from datetime import datetime
 
-    # 1. Función de Refresco Automático (60 segundos)
-    # Esto hace que el radar se mueva solo como lo tenías antes
-    if 'last_refresh' not in st.session_state:
-        st.session_state.last_refresh = datetime.now()
+    # 1. Configuración de página limpia
+    # st.set_page_config(page_title="ACORAZADO MONTERO", layout="centered")
 
-    # 2. Intentar lanzar el Sistema Completo (Login, Academia, Noticias)
-    try:
-        # Ejecutamos tu función principal que contiene todo el menú
-        EJECUTAR_SISTEMA_MONTERO()
+    # 2. El "Portero": Si no hay contraseña, no pasa nadie
+    if "autenticado" not in st.session_state:
+        st.session_state.autenticado = False
+
+    if not st.session_state.autenticado:
+        st.title("⚓ ACCESO AL ACORAZADO MONTERO")
+        # Aquí es donde pones tu clave
+        password = st.text_input("Introduce la Clave de Mando:", type="password")
         
-        # 3. Lógica del Temporizador (Auto-Refresh)
-        # Espera 60 segundos y vuelve a cargar para actualizar velas
-        time.sleep(60)
-        st.rerun()
+        if st.button("ENTRAR AL BÚNKER"):
+            if password == "TU_CLAVE_AQUI": # <--- CAMBIA ESTO POR TU CLAVE REAL
+                st.session_state.autenticado = True
+                st.success("Acceso concedido. Iniciando sistemas...")
+                time.sleep(1)
+                st.rerun()
+            else:
+                st.error("❌ Clave incorrecta. Acceso denegado.")
+    
+    else:
+        # 3. SI YA ESTÁ AUTENTICADO: Lanzamos todo lo demás
+        try:
+            # Esto activa tu Academia, Noticias y el Trading
+            EJECUTAR_SISTEMA_MONTERO()
 
-    except NameError:
-        st.error("❌ Error: No se encuentra la función 'EJECUTAR_SISTEMA_MONTERO'. Revisa el nombre en la línea 73.")
-    except Exception as e:
-        st.error(f"⚠️ Error en el Puente de Mando: {e}")
-# --- ARRANQUE ---
-if _name_ == "_main_":
-    EJECUTAR_SISTEMA_MONTERO()
+            # 4. EL MOTOR DEL AUTO-REFRESH (Solo cuando ya estás dentro)
+            # Refresca cada 60 segundos para las velas y noticias
+            time.sleep(60)
+            st.rerun()
+            
+        except Exception as e:
+            st.error(f"⚠️ Error en el interior del búnker: {e}")
