@@ -2519,10 +2519,56 @@ def EJECUTAR_SISTEMA_MONTERO():
     # NOTA: Aquí el código seguirá ejecutando el resto de tus 2,500 líneas
     # si están bien escritas debajo de este título.
 
-if __name__ == "__main__":
+if _name_ == "_main_":
     try:
         import streamlit as st
         # Llamamos a la función con 'I' latina como la tienes arriba
+        EJECUTAR_SISTEMA_MONTERO()
+    except Exception as e:
+        import streamlit as st
+        st.error(f"⚠️ Error crítico al lanzar el sistema: {e}")
+Has enviado
+# ==============================================================================
+# 🏁 CONEXIÓN FINAL CON YAHOO FINANCE Y AUTO-REFRESH
+# ==============================================================================
+
+def EJECUTAR_SISTEMA_MONTERO():
+    import streamlit as st
+    import yfinance as yf # Importamos Yahoo Finance
+    from datetime import datetime
+    
+    # 1. Título y Estado
+    st.title("⚓ MONTERO v53.5 | EL ACORAZADO INSTITUCIONAL")
+    st.info(f"🔄 Última actualización: {datetime.now().strftime('%H:%M:%S')}")
+
+    # 2. Bloque de Datos (Yahoo Finance)
+    try:
+        # Aquí puedes cambiar 'BTC-USD' por tu par favorito
+        with st.spinner('⚓ Cargando datos de Yahoo Finance...'):
+            data = yf.download(tickers='BTC-USD', period='1d', interval='5m')
+            
+        if not data.empty:
+            st.success("✅ Datos de Mercado Recibidos")
+            # --- AQUÍ EJECUTAMOS EL RESTO DE TU LÓGICA SMC ---
+            # (El sistema usará 'data' para calcular los Order Blocks)
+        else:
+            st.warning("⚠️ Yahoo Finance no devolvió datos. Revisa la conexión.")
+            
+    except Exception as e:
+        st.error(f"❌ Error de conexión: {e}")
+
+# --- ARRANQUE CON AUTO-REFRESH CADA 60 SEGUNDOS ---
+if __name__ == "__main__":
+    import streamlit as st
+    
+    # Esto es lo que hacía que se moviera solo antes:
+    # st.empty() ayuda a limpiar la pantalla en cada ciclo
+    EJECUTAR_SISTEMA_MONTERO()
+    
+    # Truco de refresco simple para Streamlit
+    # import time
+    # time.sleep(60)
+    # st.rerun()
         EJECUTAR_SISTEMA_MONTERO()
     except Exception as e:
         import streamlit as st
