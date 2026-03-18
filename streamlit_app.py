@@ -2505,7 +2505,7 @@ def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO
 # ==============================================================================
 # 🚀 IGNICIÓN FINAL DEL ACORAZADO MONTERO
 # ==============================================================================
-if _name_ == "_main_":
+if __name__ == "__main__":
     try:
         # En lugar de buscar una función 'main', lanzamos el búnker directamente
         # Si tienes una variable que instancia el búnker, úsala aquí.
