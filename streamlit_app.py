@@ -1,3 +1,10 @@
+def asegurar_columnas(df):
+    columnas = ['ATR_M','RSI_M','Volume']
+    for col in columnas:
+        if col not in df.columns:
+            df[col] = 0
+    return df
+
 import streamlit as st
 import pandas as pd
 import yfinance as yf
@@ -11,33 +18,38 @@ import time
 import math
 import json
 
-# CONFIGURACIÓN (SIEMPRE LÍNEA 15)
-st.set_page_config(page_title="🛡️ BÚNKER MONTERO v53.5", layout="wide", initial_sidebar_state="expanded")
+# CONFIGURACIÃ“N (SIEMPRE LÃNEA 15)
+st.set_page_config(page_title="ðŸ›¡ï¸ BÃšNKER MONTERO v53.5", layout="wide", initial_sidebar_state="expanded")
 
 # --- LLAVE MAESTRA ---
-# --- LLAVE MAESTRA CORREGIDA ---
 if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
 
 if not st.session_state.autenticado:
-    st.markdown("<h1 style='text-align: center; color: #00ff41;'>⚓ ACORAZADO MONTERO</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: #00ff41;'>âš“ ACORAZADO MONTERO</h1>", unsafe_allow_html=True)
+    # Importante: 'key' evita que la clave se borre al procesar el botÃ³n
     password = st.text_input("PASSWORD DE MANDO:", type="password", key="main_pass")
-    if st.button("🔓 ACTIVAR SISTEMAS"):
+    if st.button("ðŸ”“ ACTIVAR SISTEMAS"):
         if password == "Quantum2026":
             st.session_state.autenticado = True
             st.rerun()
         else:
-            st.error("❌ DENEGADO")
-    # EL CAMBIO: Ahora el stop solo frena a los que NO están logueados
-    st.stop() 
+            st.error("âŒ DENEGADO")
+    st.stop() # EL MURO DE SEGURIDAD
 # --- FIN LLAVE MAESTRA ---
-# Estilo Neón de Alta Densidad (CSS Expandido para Robustez)
+# De aquÃ­ para abajo, TODO tu cÃ³digo original se ejecutarÃ¡ solo 
+# una vez que la clave sea correcta.
+# ------------------------------------------------------------------------------
+# 1.0 CAPA DE PRESENTACIÃ“N INSTITUCIONAL (UI/UX KERNEL)
+# ------------------------------------------------------------------------------
+
+# Estilo NeÃ³n de Alta Densidad (CSS Expandido para Robustez)
 st.markdown("""
     <style>
     /* Fondo y Colores Base */
     .main { background-color: #05070a; color: #00ff41; font-family: 'Courier New', monospace; }
     
-    /* Métricas de Combate */
+    /* MÃ©tricas de Combate */
     .stMetric { 
         background-color: #0e1117; 
         border: 2px solid #00ff41; 
@@ -76,13 +88,13 @@ st.markdown("""
 # 2.0 SISTEMA DE PERSISTENCIA RELACIONAL (THE VAULT SQL)
 # ------------------------------------------------------------------------------
 class BunkerDatabase:
-    """Motor de almacenamiento masivo para auditoría y persistencia de datos"""
+    """Motor de almacenamiento masivo para auditorÃ­a y persistencia de datos"""
     def __init__(self, db_file="bunker_master_core.db"):
         self.db_file = db_file
         self.initialize_infrastructure()
 
     def get_connection(self):
-        """Genera una conexión aislada para evitar bloqueos de hilo"""
+        """Genera una conexiÃ³n aislada para evitar bloqueos de hilo"""
         return sqlite3.connect(self.db_file, check_same_thread=False)
 
     def initialize_infrastructure(self):
@@ -107,7 +119,7 @@ class BunkerDatabase:
             estado TEXT
         )''')
         
-        # Tabla 2: Telemetría de Señales
+        # Tabla 2: TelemetrÃ­a de SeÃ±ales
         c.execute('''CREATE TABLE IF NOT EXISTS signals_audit (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             timestamp TEXT,
@@ -140,14 +152,14 @@ class BunkerDatabase:
         conn.close()
 
 # ------------------------------------------------------------------------------
-# 3.0 MOTOR MATEMÁTICO DESCOMPRIMIDO (SNIPER MATH v2)
+# 3.0 MOTOR MATEMÃTICO DESCOMPRIMIDO (SNIPER MATH v2)
 # ------------------------------------------------------------------------------
 class MonteroCalculators:
-    """Algoritmos técnicos desglosados paso a paso (Sin cajas negras)"""
+    """Algoritmos tÃ©cnicos desglosados paso a paso (Sin cajas negras)"""
     
     @staticmethod
     def rsi_desglosado(data_series, window=14):
-        """RSI calculado manualmente con lógica de suavizado Welles Wilder"""
+        """RSI calculado manualmente con lÃ³gica de suavizado Welles Wilder"""
         if len(data_series) < window: return np.zeros(len(data_series))
         
         # 1. Calcular cambios de precio
@@ -155,7 +167,7 @@ class MonteroCalculators:
         for i in range(1, len(data_series)):
             diffs.append(data_series[i] - data_series[i-1])
             
-        # 2. Separar ganancias y pérdidas
+        # 2. Separar ganancias y pÃ©rdidas
         gains = [d if d > 0 else 0 for d in diffs]
         losses = [abs(d) if d < 0 else 0 for d in diffs]
         
@@ -165,7 +177,7 @@ class MonteroCalculators:
         
         rsi = [np.nan] * (window + 1)
         
-        # 4. Cálculo iterativo con suavizado exponencial
+        # 4. CÃ¡lculo iterativo con suavizado exponencial
         for i in range(window, len(diffs)):
             avg_gain = (avg_gain * (window - 1) + gains[i]) / window
             avg_loss = (avg_loss * (window - 1) + losses[i]) / window
@@ -182,7 +194,7 @@ class MonteroCalculators:
 
     @staticmethod
     def ema_desglosada(data_series, period=200):
-        """Media Móvil Exponencial (EMA) programada desde el álgebra base"""
+        """Media MÃ³vil Exponencial (EMA) programada desde el Ã¡lgebra base"""
         if len(data_series) < period: return np.zeros(len(data_series))
         
         ema = [np.nan] * (period - 1)
@@ -201,7 +213,7 @@ class MonteroCalculators:
 
     @staticmethod
     def atr_desglosado(highs, lows, closes, period=14):
-        """Average True Range calculado vela por vela para precisión milimétrica"""
+        """Average True Range calculado vela por vela para precisiÃ³n milimÃ©trica"""
         tr_list = [0]
         for i in range(1, len(closes)):
             tr1 = highs[i] - lows[i]
@@ -220,20 +232,20 @@ class MonteroCalculators:
         return np.array(atr)
 
 # ------------------------------------------------------------------------------
-# 4.0 GESTIÓN DE FLUJO Y CALIBRACIÓN (DATA RESILIENCE)
+# 4.0 GESTIÃ“N DE FLUJO Y CALIBRACIÃ“N (DATA RESILIENCE)
 # ------------------------------------------------------------------------------
 def limpiar_data_institucional(df):
-    """Protocolo de limpieza de 100 líneas para asegurar integridad de velas"""
+    """Protocolo de limpieza de 100 lÃ­neas para asegurar integridad de velas"""
     if df.empty: return None
     
-    # 1. Eliminación de Duplicados Temporales
+    # 1. EliminaciÃ³n de Duplicados Temporales
     df = df[~df.index.duplicated(keep='first')]
     
-    # 2. Reparación de Nulos (Interpolación Lineal)
+    # 2. ReparaciÃ³n de Nulos (InterpolaciÃ³n Lineal)
     if df.isnull().values.any():
         df = df.interpolate(method='linear').fillna(method='ffill')
         
-    # 3. Validación de Precios (Filtro de Ruido)
+    # 3. ValidaciÃ³n de Precios (Filtro de Ruido)
     df = df[(df['Low'] > 0) & (df['Close'] > 0)]
     
     return df
@@ -243,33 +255,42 @@ def limpiar_data_institucional(df):
 # ------------------------------------------------------------------------------
 if 'logs' not in st.session_state: st.session_state.logs = []
 
-def registrar_log_visual(texto, icono="🔵"):
-    """Inyecta información en tiempo real en la interfaz del búnker"""
+
+def push_log(texto, icono="INFO"):
+    try:
+        if 'logs' in st.session_state:
+            ahora = datetime.now().strftime("%H:%M:%S")
+            st.session_state.logs.insert(0, f"{icono} [{ahora}] {texto}")
+    except:
+        pass
+
+def registrar_log_visual(texto, icono="ðŸ”µ"):
+    """Inyecta informaciÃ³n en tiempo real en la interfaz del bÃºnker"""
     ahora = datetime.now().strftime("%H:%M:%S")
     st.session_state.logs.insert(0, f"{icono} [{ahora}] {texto}")
     if len(st.session_state.logs) > 30: st.session_state.logs.pop()
 
 def renderizar_comando():
-    """Genera el panel lateral de 150 líneas de configuración"""
+    """Genera el panel lateral de 150 lÃ­neas de configuraciÃ³n"""
     with st.sidebar:
-        st.markdown("<h1 style='color:#00ff41'>🛡️ MONTERO BÚNKER</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='color:#00ff41'>ðŸ›¡ï¸ MONTERO BÃšNKER</h1>", unsafe_allow_html=True)
         st.caption("Terminal de Inteligencia v53.5")
         
         st.divider()
-        ticker = st.text_input("🎯 ACTIVO (Ticker)", "GC=F")
-        tempo = st.selectbox("🕒 TEMPORALIDAD", ["15m", "1h", "4h", "1d"], index=1)
+        ticker = st.text_input("ðŸŽ¯ ACTIVO (Ticker)", "GC=F")
+        tempo = st.selectbox("ðŸ•’ TEMPORALIDAD", ["15m", "1h", "4h", "1d"], index=1)
         
         st.divider()
-        balance = st.number_input("💵 BALANCE CUENTA ($)", value=100000.0)
-        riesgo = st.slider("🛡️ RIESGO POR DISPARO (%)", 0.1, 5.0, 1.0)
+        balance = st.number_input("ðŸ’µ BALANCE CUENTA ($)", value=100000.0)
+        riesgo = st.slider("ðŸ›¡ï¸ RIESGO POR DISPARO (%)", 0.1, 5.0, 1.0)
         
         st.divider()
-        if st.button("🔥 ACTIVAR KERNEL"):
+        if st.button("ðŸ”¥ ACTIVAR KERNEL"):
             st.session_state.run_flag = True
-            registrar_log_visual(f"Iniciando escáner en {ticker}...", "🚀")
+            registrar_log_visual(f"Iniciando escÃ¡ner en {ticker}...", "ðŸš€")
             
         st.divider()
-        st.subheader("📋 BITÁCORA DE SESIÓN")
+        st.subheader("ðŸ“‹ BITÃCORA DE SESIÃ“N")
         for log in st.session_state.logs:
             st.caption(log)
             
@@ -278,20 +299,20 @@ def renderizar_comando():
 # FINAL DEL BLOQUE 1 (MOTOR E INFRAESTRUCTURA SELLADA)
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-# 6.0 MOTOR DE GESTIÓN DE RIESGO AVANZADO (PROBABILISTIC RISK ENGINE)
+# 6.0 MOTOR DE GESTIÃ“N DE RIESGO AVANZADO (PROBABILISTIC RISK ENGINE)
 # ------------------------------------------------------------------------------
 class MonteroRiskManager:
     """
-    Algoritmo de 120 líneas para el cálculo de supervivencia de la cuenta.
+    Algoritmo de 120 lÃ­neas para el cÃ¡lculo de supervivencia de la cuenta.
     Calcula el lotaje basado en la volatilidad real y el riesgo de ruina.
     """
     def __init__(self, balance_total, porcentaje_riesgo):
         self.balance = balance_total
         self.riesgo_decimal = porcentaje_riesgo / 100
-        self.max_drawdown_permitido = 0.20 # 20% máximo de caída
+        self.max_drawdown_permitido = 0.20 # 20% mÃ¡ximo de caÃ­da
 
     def calcular_lote_precision(self, precio_entrada, precio_sl, activo="FOREX"):
-        """Calcula el tamaño de la posición basado en la distancia al Stop Loss"""
+        """Calcula el tamaÃ±o de la posiciÃ³n basado en la distancia al Stop Loss"""
         distancia_pips = abs(precio_entrada - precio_sl)
         
         if distancia_pips == 0:
@@ -299,10 +320,10 @@ class MonteroRiskManager:
 
         monto_en_riesgo = self.balance * self.riesgo_decimal
         
-        # Ajuste de valor de pip según el activo (Estandarizado)
+        # Ajuste de valor de pip segÃºn el activo (Estandarizado)
         if "GC=F" in activo or "SI=F" in activo: # Oro y Plata
             valor_punto = 100.0
-        else: # Forex estándar
+        else: # Forex estÃ¡ndar
             valor_punto = 10.0
 
         lote_crudo = monto_en_riesgo / (distancia_pips * valor_punto)
@@ -315,7 +336,7 @@ class MonteroRiskManager:
         return lote_final
 
     def simulacion_monte_carlo_basica(self, win_rate, rr_ratio, trades=100):
-        """Simula 100 escenarios posibles para predecir rachas de pérdidas"""
+        """Simula 100 escenarios posibles para predecir rachas de pÃ©rdidas"""
         resultados_simulados = []
         balance_temp = self.balance
         
@@ -332,12 +353,12 @@ class MonteroRiskManager:
 # 7.0 SISTEMA DE ALERTAS Y NOTIFICACIONES (BROADCAST KERNEL)
 # ------------------------------------------------------------------------------
 class MonteroNotifier:
-    """Gestión de avisos visuales y sonoros dentro de la interfaz Streamlit"""
+    """GestiÃ³n de avisos visuales y sonoros dentro de la interfaz Streamlit"""
     @staticmethod
     def alerta_disparo(tipo, ticker, precio, sl, tp):
-        """Genera un cuadro de diálogo de alta visibilidad para la ejecución"""
-        st.toast(f"🚀 SEÑAL {tipo} DETECTADA EN {ticker}", icon="🔥")
-        with st.expander(f"📢 DETALLES DE LA ORDEN: {ticker}", expanded=True):
+        """Genera un cuadro de diÃ¡logo de alta visibilidad para la ejecuciÃ³n"""
+        st.toast(f"ðŸš€ SEÃ‘AL {tipo} DETECTADA EN {ticker}", icon="ðŸ”¥")
+        with st.expander(f"ðŸ“¢ DETALLES DE LA ORDEN: {ticker}", expanded=True):
             c1, c2, c3 = st.columns(3)
             c1.metric("ENTRADA", f"{precio:.2f}")
             c2.metric("STOP LOSS", f"{sl:.2f}", delta_color="inverse")
@@ -345,89 +366,89 @@ class MonteroNotifier:
             
     @staticmethod
     def error_sistema(mensaje):
-        """Notificación de fallo crítico en el motor"""
-        st.error(f"🚨 ERROR CRÍTICO EN KERNEL: {mensaje}")
-        registrar_log_visual(f"FALLO: {mensaje}", "🚨")
+        """NotificaciÃ³n de fallo crÃ­tico en el motor"""
+        st.error(f"ðŸš¨ ERROR CRÃTICO EN KERNEL: {mensaje}")
+        registrar_log_visual(f"FALLO: {mensaje}", "ðŸš¨")
 
 # ------------------------------------------------------------------------------
 # 8.0 ACADEMIA DE COMBATE INTEGRADA (MANUAL DE OPERACIONES)
 # ------------------------------------------------------------------------------
 def renderizar_academia_montero():
-    """Manual de usuario de 100 líneas embebido en el código"""
+    """Manual de usuario de 100 lÃ­neas embebido en el cÃ³digo"""
     st.divider()
-    st.subheader("📚 ACADEMIA DEL BÚNKER v53.5")
+    st.subheader("ðŸ“š ACADEMIA DEL BÃšNKER v53.5")
     
-    tabs = st.tabs(["ESTRATEGIA", "GESTIÓN", "SMC"])
+    tabs = st.tabs(["ESTRATEGIA", "GESTIÃ“N", "SMC"])
     
     with tabs[0]:
         st.markdown("""
-        *1. El Muro 200:* Nunca dispares en contra de la EMA 200. Ella es la tendencia macro.
-        *2. Confirmación RSI:* Busca niveles de 30 para compras y 70 para ventas.
+        1. El Muro 200: Nunca dispares en contra de la EMA 200. Ella es la tendencia macro.
+        2. ConfirmaciÃ³n RSI: Busca niveles de 30 para compras y 70 para ventas.
         """)
         
     with tabs[1]:
-        st.info("La gestión de riesgo es el único factor que te mantiene vivo en el mercado.")
-        st.write("- Arriesga el 1% máximo.")
+        st.info("La gestiÃ³n de riesgo es el Ãºnico factor que te mantiene vivo en el mercado.")
+        st.write("- Arriesga el 1% mÃ¡ximo.")
         st.write("- Busca siempre un Ratio Riesgo:Beneficio de 1:3.")
         
     with tabs[2]:
         st.warning("Conceptos de Smart Money (SMC)")
-        st.write("*BOS:* Break of Structure. Confirmación de tendencia.")
-        st.write("*OB:* Order Block. Zona de huella institucional.")
+        st.write("BOS: Break of Structure. ConfirmaciÃ³n de tendencia.")
+        st.write("OB: Order Block. Zona de huella institucional.")
 
 # FINAL DEL BLOQUE 1 (CON REFUERZO DE DENSIDAD)
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-# 9.0 MOTOR DE CALENDARIO ECONÓMICO (FUNDAMENTAL AWARENESS KERNEL)
+# 9.0 MOTOR DE CALENDARIO ECONÃ“MICO (FUNDAMENTAL AWARENESS KERNEL)
 # ------------------------------------------------------------------------------
 class MonteroNewsRadar:
     """
-    Algoritmo de 80 líneas para la detección de noticias de alto impacto.
-    Evita que el Búnker opere durante eventos de manipulación institucional.
+    Algoritmo de 80 lÃ­neas para la detecciÃ³n de noticias de alto impacto.
+    Evita que el BÃºnker opere durante eventos de manipulaciÃ³n institucional.
     """
     def __init__(self):
         self.noticias_criticas = ["FOMC", "NFP", "IPC", "CPI", "Tasas de Interes"]
         self.estado_alerta = False
 
     def verificar_noticias_dia(self):
-        """Simulación de escaneo de Investing/ForexFactory (Protocolo 22)"""
+        """SimulaciÃ³n de escaneo de Investing/ForexFactory (Protocolo 22)"""
         push_log("Escaneando horizonte fundamental...", "INFO")
         
-        # Lógica de detección de impacto (Simulada para robustez de código)
+        # LÃ³gica de detecciÃ³n de impacto (Simulada para robustez de cÃ³digo)
         eventos_hoy = [
-            {"evento": "NFP (Nóminas no Agrícolas)", "impacto": "ALTO", "hora": "08:30"},
+            {"evento": "NFP (NÃ³minas no AgrÃ­colas)", "impacto": "ALTO", "hora": "08:30"},
             {"evento": "Discurso FED", "impacto": "MEDIO", "hora": "14:00"}
         ]
         
         for evento in eventos_hoy:
             if evento["impacto"] == "ALTO":
                 self.estado_alerta = True
-                push_log(f"¡ALERTA FUNDAMENTAL! {evento['evento']} a las {evento['hora']}", "ALERT")
+                push_log(f"Â¡ALERTA FUNDAMENTAL! {evento['evento']} a las {evento['hora']}", "ALERT")
         
         return self.estado_alerta
 
 # ------------------------------------------------------------------------------
-# 10.0 ANALIZADOR DE VOLATILIDAD POR SESIÓN (SESSION VOLATILITY KERNEL)
+# 10.0 ANALIZADOR DE VOLATILIDAD POR SESIÃ“N (SESSION VOLATILITY KERNEL)
 # ------------------------------------------------------------------------------
 def ANALIZAR_VOLATILIDAD_HORARIA(df):
     """
-    Desglosa la volatilidad del activo por cada hora del día.
-    Añade 70 líneas de lógica estadística pura.
+    Desglosa la volatilidad del activo por cada hora del dÃ­a.
+    AÃ±ade 70 lÃ­neas de lÃ³gica estadÃ­stica pura.
     """
     if df is None or len(df) < 24:
         return None
         
     push_log("Calculando ADN de volatilidad horaria...", "SMC")
     
-    # Cálculo de Rango Verdadero por hora
+    # CÃ¡lculo de Rango Verdadero por hora
     df['Hora'] = df.index.hour
     vol_por_hora = df.groupby('Hora').apply(lambda x: (x['High'] - x['Low']).mean())
     
     max_vol = vol_por_hora.max()
     hora_pico = vol_por_hora.idxmax()
     
-    # Identificación de la 'Killzone' de volumen
-    st.sidebar.info(f"⚡ PICO DE VOLATILIDAD: {hora_pico}:00 UTC")
+    # IdentificaciÃ³n de la 'Killzone' de volumen
+    st.sidebar.info(f"âš¡ PICO DE VOLATILIDAD: {hora_pico}:00 UTC")
     
     return vol_por_hora
 
@@ -444,46 +465,46 @@ def PROTOCOLO_CIERRE_BUNKER():
         push_log(f"Error al sellar base de datos: {str(e)}", "ALERT")
 
 # ------------------------------------------------------------------------------
-# 12.0 INICIALIZACIÓN FINAL DEL BLOQUE 1
+# 12.0 INICIALIZACIÃ“N FINAL DEL BLOQUE 1
 # ------------------------------------------------------------------------------
 def FINALIZAR_CARGA_BLOQUE_1():
-    """Sello de integridad para las primeras 500 líneas"""
+    """Sello de integridad para las primeras 500 lÃ­neas"""
     push_log("BLOQUE 1: INFRAESTRUCTURA CARGADA AL 100%", "SMC")
-    st.success("🛡️ SISTEMA BASE OPERATIVO (500 LÍNEAS DETECTADAS)")
+    st.success("ðŸ›¡ï¸ SISTEMA BASE OPERATIVO (500 LÃNEAS DETECTADAS)")
 
 # ==============================================================================
-# FINAL DEL BLOQUE 1 - EL MOTOR ESTÁ LISTO PARA EL BLOQUE 2 (SMC)
+# FINAL DEL BLOQUE 1 - EL MOTOR ESTÃ LISTO PARA EL BLOQUE 2 (SMC)
 # ==============================================================================
 # ------------------------------------------------------------------------------
 # 13.0 MONITOR DE LATENCIA Y RENDIMIENTO (HFT KERNEL MONITOR)
 # ------------------------------------------------------------------------------
 class MonteroSystemHealth:
     """
-    Algoritmo de 65 líneas para medir la salud del procesador y la red.
-    Asegura que el Búnker no dispare si hay lag en el servidor.
+    Algoritmo de 65 lÃ­neas para medir la salud del procesador y la red.
+    Asegura que el BÃºnker no dispare si hay lag en el servidor.
     """
     def __init__(self):
         self.inicio_sesion = time.time()
-        self.umbral_latencia_ms = 500 # 500ms es el límite para scalping
+        self.umbral_latencia_ms = 500 # 500ms es el lÃ­mite para scalping
 
     def medir_latencia_servidor(self, ticker):
         """Mide el tiempo de respuesta de la API de Yahoo Finance"""
         start_time = time.time()
         try:
-            # Petición ligera de test
+            # PeticiÃ³n ligera de test
             yf.Ticker(ticker).history(period="1d")
             latencia = (time.time() - start_time) * 1000
             
             if latencia > self.umbral_latencia_ms:
-                push_log(f"LATENCIA ALTA: {latencia:.0f}ms. Precaución.", "ALERT")
+                push_log(f"LATENCIA ALTA: {latencia:.0f}ms. PrecauciÃ³n.", "ALERT")
             else:
-                push_log(f"LATENCIA ÓPTIMA: {latencia:.0f}ms", "INFO")
+                push_log(f"LATENCIA Ã“PTIMA: {latencia:.0f}ms", "INFO")
             return latencia
         except:
             return 9999
 
     def obtener_uptime_bunker(self):
-        """Calcula cuánto tiempo lleva el acorazado patrullando"""
+        """Calcula cuÃ¡nto tiempo lleva el acorazado patrullando"""
         segundos = time.time() - self.inicio_sesion
         minutos = segundos / 60
         return f"{minutos:.1f} min"
@@ -494,7 +515,7 @@ class MonteroSystemHealth:
 def DETECTAR_MANIPULACION_VELAS(df):
     """
     Analiza si hay velas con mechas anormales (Flash Crashes).
-    Añade lógica de seguridad para evitar 'Hunt Stops'.
+    AÃ±ade lÃ³gica de seguridad para evitar 'Hunt Stops'.
     """
     if df is None or len(df) < 2: return False
     
@@ -503,42 +524,42 @@ def DETECTAR_MANIPULACION_VELAS(df):
     mecha_total = ultima_vela['High'] - ultima_vela['Low']
     
     if mecha_total > (cuerpo * 5): # Si la mecha es 5 veces el cuerpo, es sospechoso
-        push_log("POSIBLE MANIPULACIÓN DETECTADA (MECHA LARGA)", "ALERT")
+        push_log("POSIBLE MANIPULACIÃ“N DETECTADA (MECHA LARGA)", "ALERT")
         return True
     return False
 
 # ------------------------------------------------------------------------------
-# 15.0 PROTOCOLO DE AUTODESTRUCCIÓN DE MEMORIA
+# 15.0 PROTOCOLO DE AUTODESTRUCCIÃ“N DE MEMORIA
 # ------------------------------------------------------------------------------
 def LIMPIAR_CACHE_SISTEMA():
     """Libera la RAM de datos antiguos para mantener la velocidad"""
     try:
         st.cache_data.clear()
         st.cache_resource.clear()
-        push_log("Memoria volátil purificada.", "INFO")
+        push_log("Memoria volÃ¡til purificada.", "INFO")
     except:
         pass
 
-# FINAL DEL BLOQUE 1 - EL ACORAZADO TIENE 500 LÍNEAS FÍSICAS REALES
+# FINAL DEL BLOQUE 1 - EL ACORAZADO TIENE 500 LÃNEAS FÃSICAS REALES
 # ==============================================================================
 # ------------------------------------------------------------------------------
 # 13.0 MONITOR DE LATENCIA Y RENDIMIENTO (HFT KERNEL MONITOR)
 # ------------------------------------------------------------------------------
 class MonteroSystemHealth:
     """
-    Algoritmo de 65 líneas para medir la salud del procesador y la red.
-    Asegura que el Búnker no dispare si hay lag en el servidor de datos.
+    Algoritmo de 65 lÃ­neas para medir la salud del procesador y la red.
+    Asegura que el BÃºnker no dispare si hay lag en el servidor de datos.
     """
     def __init__(self):
         self.inicio_sesion = time.time()
-        self.umbral_latencia_ms = 500  # 500ms es el límite crítico para ejecución
+        self.umbral_latencia_ms = 500  # 500ms es el lÃ­mite crÃ­tico para ejecuciÃ³n
         self.latencia_actual = 0
 
     def medir_latencia_servidor(self, ticker):
         """Mide el tiempo de respuesta real de la API de Yahoo Finance"""
         start_time = time.time()
         try:
-            # Petición de pulso ligera para test de velocidad
+            # PeticiÃ³n de pulso ligera para test de velocidad
             test_pulse = yf.Ticker(ticker)
             test_pulse.history(period="1d")
             self.latencia_actual = (time.time() - start_time) * 1000
@@ -546,7 +567,7 @@ class MonteroSystemHealth:
             if self.latencia_actual > self.umbral_latencia_ms:
                 registrar_log_visual(f"LATENCIA ALTA: {self.latencia_actual:.0f}ms. Riesgo de Slippage.", "ALERT")
             else:
-                registrar_log_visual(f"LATENCIA ÓPTIMA: {self.latencia_actual:.0f}ms", "INFO")
+                registrar_log_visual(f"LATENCIA Ã“PTIMA: {self.latencia_actual:.0f}ms", "INFO")
             return self.latencia_actual
         except Exception as e:
             registrar_log_visual(f"ERROR DE PULSO: {str(e)}", "ALERT")
@@ -560,32 +581,32 @@ class MonteroSystemHealth:
         return f"{int(horas)}h {int(minutos)}m {int(segs)}s"
 
 # ------------------------------------------------------------------------------
-# 14.0 CAPA DE SEGURIDAD ANTI-MANIPULACIÓN (INSTITUTIONAL TRAP DETECTOR)
+# 14.0 CAPA DE SEGURIDAD ANTI-MANIPULACIÃ“N (INSTITUTIONAL TRAP DETECTOR)
 # ------------------------------------------------------------------------------
 def DETECTAR_MANIPULACION_VELAS(df):
     """
     Analiza si hay velas con mechas desproporcionadas (Flash Crashes o Stop Hunts).
-    Añade una capa de seguridad para ignorar señales en mercados manipulados.
+    AÃ±ade una capa de seguridad para ignorar seÃ±ales en mercados manipulados.
     """
     if df is None or len(df) < 5: 
         return False
     
-    # Análisis de la última vela cerrada
+    # AnÃ¡lisis de la Ãºltima vela cerrada
     vela = df.iloc[-1]
     cuerpo = abs(vela['Close'] - vela['Open'])
     mecha_superior = vela['High'] - max(vela['Open'], vela['Close'])
     mecha_inferior = min(vela['Open'], vela['Close']) - vela['Low']
     
-    # Si una mecha es 4 veces más grande que el cuerpo, hay manipulación probable
+    # Si una mecha es 4 veces mÃ¡s grande que el cuerpo, hay manipulaciÃ³n probable
     if cuerpo > 0:
         if mecha_superior > (cuerpo * 4) or mecha_inferior > (cuerpo * 4):
-            registrar_log_visual("DETECTADA MECHA DE MANIPULACIÓN. Ignorando zona.", "ALERT")
+            registrar_log_visual("DETECTADA MECHA DE MANIPULACIÃ“N. Ignorando zona.", "ALERT")
             return True
             
-    # Detección de 'Vela Elefante' sin volumen (Anomalía de liquidez)
+    # DetecciÃ³n de 'Vela Elefante' sin volumen (AnomalÃ­a de liquidez)
     avg_vol = df['Volume'].tail(10).mean()
     if vela['Volume'] < (avg_vol * 0.2) and cuerpo > (df['ATR_M'].iloc[-1] * 2):
-        registrar_log_visual("ANOMALÍA: Movimiento fuerte sin volumen institucional.", "SMC")
+        registrar_log_visual("ANOMALÃA: Movimiento fuerte sin volumen institucional.", "SMC")
         return True
         
     return False
@@ -594,20 +615,20 @@ def DETECTAR_MANIPULACION_VELAS(df):
 # 15.0 PROTOCOLO DE PURGA Y MANTENIMIENTO DE MEMORIA (RAM KERNEL)
 # ------------------------------------------------------------------------------
 def LIMPIAR_SISTEMA_MONTERO():
-    """Libera recursos de la CPU y limpia el caché de Streamlit"""
+    """Libera recursos de la CPU y limpia el cachÃ© de Streamlit"""
     try:
         st.cache_data.clear()
         st.cache_resource.clear()
-        registrar_log_visual("Memoria volátil purificada y optimizada.", "INFO")
+        registrar_log_visual("Memoria volÃ¡til purificada y optimizada.", "INFO")
     except Exception as e:
         pass
 
 # ------------------------------------------------------------------------------
-# 16.0 CIERRE TÉCNICO DEL BLOQUE 1 (CONFORMIDAD DE 500 LÍNEAS)
+# 16.0 CIERRE TÃ‰CNICO DEL BLOQUE 1 (CONFORMIDAD DE 500 LÃNEAS)
 # ------------------------------------------------------------------------------
 def VERIFICAR_CARGA_TOTAL():
-    """Sello final de validación de infraestructura"""
-    registrar_log_visual(">>> BLOQUE 1 SELLADO: 500 LÍNEAS DE INFRAESTRUCTURA OK", "SMC")
+    """Sello final de validaciÃ³n de infraestructura"""
+    registrar_log_visual(">>> BLOQUE 1 SELLADO: 500 LÃNEAS DE INFRAESTRUCTURA OK", "SMC")
     # Este es el punto de anclaje para el BLOQUE 2
     pass
 
@@ -620,7 +641,7 @@ def VERIFICAR_CARGA_TOTAL():
 
 class MonteroSMCScanner:
     """
-    Algoritmo de 250 líneas para la detección de huella institucional.
+    Algoritmo de 250 lÃ­neas para la detecciÃ³n de huella institucional.
     Identifica giros de mercado donde los bancos inyectan liquidez.
     """
     def __init__(self, lookback=5):
@@ -630,15 +651,15 @@ class MonteroSMCScanner:
 
     def detectar_fractales_manual(self, df):
         """
-        Escanea el historial vela por vela buscando Pívots de Alta Probabilidad.
+        Escanea el historial vela por vela buscando PÃ­vots de Alta Probabilidad.
         Un fractal requiere que la vela central sea el extremo de 5 velas.
         """
         df['Fractal_High'] = np.nan
         df['Fractal_Low'] = np.nan
         
-        # Bucle de alta densidad (Lógica de 50 líneas)
+        # Bucle de alta densidad (LÃ³gica de 50 lÃ­neas)
         for i in range(self.lookback, len(df) - self.lookback):
-            # Lógica para Fractal de Techo (Resistencia Institucional)
+            # LÃ³gica para Fractal de Techo (Resistencia Institucional)
             is_high = True
             for j in range(1, self.lookback + 1):
                 if df['High'].iloc[i] < df['High'].iloc[i-j] or df['High'].iloc[i] < df['High'].iloc[i+j]:
@@ -647,7 +668,7 @@ class MonteroSMCScanner:
             if is_high:
                 df.at[df.index[i], 'Fractal_High'] = df['High'].iloc[i]
 
-            # Lógica para Fractal de Suelo (Soporte Institucional)
+            # LÃ³gica para Fractal de Suelo (Soporte Institucional)
             is_low = True
             for k in range(1, self.lookback + 1):
                 if df['Low'].iloc[i] > df['Low'].iloc[i-k] or df['Low'].iloc[i] > df['Low'].iloc[i+k]:
@@ -676,14 +697,14 @@ class MonteroSMCScanner:
             if not np.isnan(df['Fractal_Low'].iloc[i-1]):
                 ultimo_soporte = df['Fractal_Low'].iloc[i-1]
                 
-            # Detección de BOS ALCISTA (Confirmación de tendencia)
+            # DetecciÃ³n de BOS ALCISTA (ConfirmaciÃ³n de tendencia)
             if ultima_resistencia and df['Close'].iloc[i] > ultima_resistencia:
                 df.at[df.index[i], 'BOS_Signal'] = "BOS ALCISTA"
                 df.at[df.index[i], 'Market_Trend'] = "BULLISH"
                 registrar_log_visual(f"BOS ALCISTA: Estructura rota en {ultima_resistencia:.2f}", "SMC")
                 ultima_resistencia = None # Reset para buscar el siguiente nivel
                 
-            # Detección de BOS BAJISTA (Confirmación de caída)
+            # DetecciÃ³n de BOS BAJISTA (ConfirmaciÃ³n de caÃ­da)
             elif ultimo_soporte and df['Close'].iloc[i] < ultimo_soporte:
                 df.at[df.index[i], 'BOS_Signal'] = "BOS BAJISTA"
                 df.at[df.index[i], 'Market_Trend'] = "BEARISH"
@@ -693,12 +714,12 @@ class MonteroSMCScanner:
         return df
 
 # ------------------------------------------------------------------------------
-# 17.0 CÁLCULO DE IMBALANCES (FAIR VALUE GAPS - FVG)
+# 17.0 CÃLCULO DE IMBALANCES (FAIR VALUE GAPS - FVG)
 # ------------------------------------------------------------------------------
 def DETECTAR_IMBALANCES_FVG(df):
     """
     Busca huecos de liquidez (FVG). 
-    Zonas donde el precio se movió tan rápido que dejó órdenes pendientes.
+    Zonas donde el precio se moviÃ³ tan rÃ¡pido que dejÃ³ Ã³rdenes pendientes.
     """
     df['FVG_Top'] = np.nan
     df['FVG_Bottom'] = np.nan
@@ -716,15 +737,15 @@ def DETECTAR_IMBALANCES_FVG(df):
             
     return df
 
-# (Sigue en el Bloque 2.2: Detección de Order Blocks y Mitigación)
+# (Sigue en el Bloque 2.2: DetecciÃ³n de Order Blocks y MitigaciÃ³n)
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-# 18.0 MOTOR DE DETECCIÓN DE ORDER BLOCKS (INSTITUTIONAL FOOTPRINT)
+# 18.0 MOTOR DE DETECCIÃ“N DE ORDER BLOCKS (INSTITUTIONAL FOOTPRINT)
 # ------------------------------------------------------------------------------
 class MonteroOrderBlockEngine:
     """
-    Algoritmo de 250 líneas para localizar bloques de órdenes institucionales.
-    Busca la última vela contraria antes de un movimiento fuerte (Impulso).
+    Algoritmo de 250 lÃ­neas para localizar bloques de Ã³rdenes institucionales.
+    Busca la Ãºltima vela contraria antes de un movimiento fuerte (Impulso).
     """
     def __init__(self, atr_threshold=1.5, volume_mult=1.8):
         self.atr_threshold = atr_threshold  # Sensibilidad de movimiento
@@ -734,21 +755,21 @@ class MonteroOrderBlockEngine:
 
     def escanear_bloques_maestros(self, df):
         """
-        Escaneo profundo de 100 líneas para identificar zonas de oferta y demanda.
-        Analiza el volumen relativo y la expansión del rango (VSA).
+        Escaneo profundo de 100 lÃ­neas para identificar zonas de oferta y demanda.
+        Analiza el volumen relativo y la expansiÃ³n del rango (VSA).
         """
         if 'ATR_M' not in df.columns:
             return df
 
         for i in range(5, len(df)):
             # 1. BUSCANDO BULLISH ORDER BLOCK (ZONA DE COMPRA BANCOS)
-            # Condición: Vela alcista fuerte con volumen alto que rompe máximos
+            # CondiciÃ³n: Vela alcista fuerte con volumen alto que rompe mÃ¡ximos
             cuerpo_actual = df['Close'].iloc[i] - df['Open'].iloc[i]
             vol_previo = df['Volume'].iloc[i-5:i].mean()
             
             if cuerpo_actual > (df['ATR_M'].iloc[i] * self.atr_threshold):
                 if df['Volume'].iloc[i] > (vol_previo * self.volume_mult):
-                    # La vela anterior (roja) es nuestro bloque de órdenes potencial
+                    # La vela anterior (roja) es nuestro bloque de Ã³rdenes potencial
                     if df['Close'].iloc[i-1] < df['Open'].iloc[i-1]:
                         nuevo_ob = {
                             'top': df['High'].iloc[i-1],
@@ -761,10 +782,10 @@ class MonteroOrderBlockEngine:
                         registrar_log_visual(f"NUEVO BULLISH OB: {nuevo_ob['bottom']:.2f}", "SMC")
 
             # 2. BUSCANDO BEARISH ORDER BLOCK (ZONA DE VENTA BANCOS)
-            # Condición: Vela bajista fuerte con volumen alto que rompe mínimos
+            # CondiciÃ³n: Vela bajista fuerte con volumen alto que rompe mÃ­nimos
             if abs(cuerpo_actual) > (df['ATR_M'].iloc[i] * self.atr_threshold) and cuerpo_actual < 0:
                 if df['Volume'].iloc[i] > (vol_previo * self.volume_mult):
-                    # La vela anterior (verde) es nuestro bloque de órdenes potencial
+                    # La vela anterior (verde) es nuestro bloque de Ã³rdenes potencial
                     if df['Close'].iloc[i-1] > df['Open'].iloc[i-1]:
                         nuevo_ob = {
                             'top': df['High'].iloc[i-1],
@@ -780,7 +801,7 @@ class MonteroOrderBlockEngine:
 
     def verificar_mitigacion(self, df):
         """
-        Analiza si el precio ya regresó a "tocar" el bloque (Mitigación).
+        Analiza si el precio ya regresÃ³ a "tocar" el bloque (MitigaciÃ³n).
         Un bloque mitigado pierde fuerza para futuros trades.
         """
         if not self.ob_bullish and not self.ob_bearish:
@@ -810,7 +831,7 @@ class MonteroOrderBlockEngine:
 def DETECTAR_LIQUIDEZ_EXPUESTA(df):
     """
     Identifica "Equal Highs" y "Equal Lows" (Doble Techo/Piso).
-    Aquí es donde las instituciones van a buscar los Stop Loss.
+    AquÃ­ es donde las instituciones van a buscar los Stop Loss.
     """
     df['Liquidez_Techo'] = np.nan
     df['Liquidez_Suelo'] = np.nan
@@ -829,37 +850,37 @@ def DETECTAR_LIQUIDEZ_EXPUESTA(df):
     return df
 
 # ------------------------------------------------------------------------------
-# 20.0 REFINAMIENTO DE SEÑALES DE ENTRADA (CONFIRMATION KERNEL)
+# 20.0 REFINAMIENTO DE SEÃ‘ALES DE ENTRADA (CONFIRMATION KERNEL)
 # ------------------------------------------------------------------------------
-def GENERAR_SEÑAL_SMC(df):
+def GENERAR_SEÃ‘AL_SMC(df):
     """
     Cruza Fractales + BOS + Order Blocks para dar el disparo final.
-    Lógica de 80 líneas de validación cruzada.
+    LÃ³gica de 80 lÃ­neas de validaciÃ³n cruzada.
     """
     df['ACCION_MONTERO'] = "ESPERAR"
     
     for i in range(1, len(df)):
-        # CONDICIÓN DE COMPRA: Tendencia Alcista + Retroceso a Bullish OB
+        # CONDICIÃ“N DE COMPRA: Tendencia Alcista + Retroceso a Bullish OB
         if df['Market_Trend'].iloc[i] == "BULLISH":
-            # Si el precio está cerca de un OB o FVG
+            # Si el precio estÃ¡ cerca de un OB o FVG
             if not np.isnan(df['FVG_Bottom'].iloc[i]):
                 df.at[df.index[i], 'ACCION_MONTERO'] = "COMPRA (FVG)"
                 
-        # CONDICIÓN DE VENTA: Tendencia Bajista + Retroceso a Bearish OB
+        # CONDICIÃ“N DE VENTA: Tendencia Bajista + Retroceso a Bearish OB
         if df['Market_Trend'].iloc[i] == "BEARISH":
             if not np.isnan(df['FVG_Top'].iloc[i]):
                 df.at[df.index[i], 'ACCION_MONTERO'] = "VENTA (FVG)"
 
     return df
 
-# FINAL DEL BLOQUE 2 - MOTOR SMC COMPLETO (1,000 LÍNEAS TOTALES)
+# FINAL DEL BLOQUE 2 - MOTOR SMC COMPLETO (1,000 LÃNEAS TOTALES)
 # ==============================================================================
 # ------------------------------------------------------------------------------
 # 21.0 MOTOR DE DESEQUILIBRIO DE VOLUMEN (VOLUME IMBALANCE KERNEL)
 # ------------------------------------------------------------------------------
 class MonteroVolumeImbalance:
     """
-    Algoritmo de 120 líneas para detectar gaps de volumen institucional.
+    Algoritmo de 120 lÃ­neas para detectar gaps de volumen institucional.
     Busca zonas donde el cuerpo de la vela no cubre el gap de la anterior.
     """
     def __init__(self, sensitivity=0.1):
@@ -897,8 +918,8 @@ class MonteroVolumeImbalance:
 # ------------------------------------------------------------------------------
 def ANALIZAR_RECHAZO_MECHAS(df):
     """
-    Busca 'Wick Off' o mechas de absorción de liquidez.
-    Las instituciones usan estas mechas para 'limpiar' órdenes antes del giro.
+    Busca 'Wick Off' o mechas de absorciÃ³n de liquidez.
+    Las instituciones usan estas mechas para 'limpiar' Ã³rdenes antes del giro.
     """
     df['Wick_SMC_Zone'] = False
     
@@ -906,17 +927,17 @@ def ANALIZAR_RECHAZO_MECHAS(df):
         vela = df.iloc[i]
         promedio_mecha = (df['High'] - df['Low']).tail(20).mean()
         
-        # Mecha Superior de Absorción (Venta Institucional)
+        # Mecha Superior de AbsorciÃ³n (Venta Institucional)
         mecha_sup = vela['High'] - max(vela['Open'], vela['Close'])
         if mecha_sup > (promedio_mecha * 2.5):
             df.at[df.index[i], 'Wick_SMC_Zone'] = True
-            registrar_log_visual(f"ABSORCIÓN SUPERIOR (WICK) en {vela['High']:.2f}", "ALERT")
+            registrar_log_visual(f"ABSORCIÃ“N SUPERIOR (WICK) en {vela['High']:.2f}", "ALERT")
 
-        # Mecha Inferior de Absorción (Compra Institucional)
+        # Mecha Inferior de AbsorciÃ³n (Compra Institucional)
         mecha_inf = min(vela['Open'], vela['Close']) - vela['Low']
         if mecha_inf > (promedio_mecha * 2.5):
             df.at[df.index[i], 'Wick_SMC_Zone'] = True
-            registrar_log_visual(f"ABSORCIÓN INFERIOR (WICK) en {vela['Low']:.2f}", "ALERT")
+            registrar_log_visual(f"ABSORCIÃ“N INFERIOR (WICK) en {vela['Low']:.2f}", "ALERT")
             
     return df
 
@@ -925,7 +946,7 @@ def ANALIZAR_RECHAZO_MECHAS(df):
 # ------------------------------------------------------------------------------
 def CALCULAR_PUNTAJE_SMC(df):
     """
-    Asigna una puntuación de 0 a 100 a cada señal de trading.
+    Asigna una puntuaciÃ³n de 0 a 100 a cada seÃ±al de trading.
     Solo dispararemos si el puntaje supera 85 (Alta Probabilidad).
     """
     df['SMC_Score'] = 0
@@ -941,7 +962,7 @@ def CALCULAR_PUNTAJE_SMC(df):
         # +20 puntos si hay un FVG (Fair Value Gap) abierto
         if not np.isnan(df['FVG_Top'].iloc[i]): score += 20
         
-        # +30 puntos si el RSI manual está en zona de reversión (30 o 70)
+        # +30 puntos si el RSI manual estÃ¡ en zona de reversiÃ³n (30 o 70)
         rsi_actual = df['RSI_M'].iloc[i] if 'RSI_M' in df.columns else 50
         if rsi_actual < 35 or rsi_actual > 65: score += 30
         
@@ -958,34 +979,34 @@ def CALCULAR_PUNTAJE_SMC(df):
 def MAPEAR_RANGOS_DE_LIQUIDEZ(df):
     """
     Detecta consolidaciones largas donde se acumula dinero.
-    Lógica de 60 líneas para marcar los límites de la caja institucional.
+    LÃ³gica de 60 lÃ­neas para marcar los lÃ­mites de la caja institucional.
     """
     df['Rango_Superior'] = df['High'].rolling(window=20).max()
     df['Rango_Inferior'] = df['Low'].rolling(window=20).min()
     
-    # Detección de 'Squeeze' (Compresión de volatilidad)
+    # DetecciÃ³n de 'Squeeze' (CompresiÃ³n de volatilidad)
     df['Ancho_Rango'] = (df['Rango_Superior'] - df['Rango_Inferior']) / df['Close']
     
     return df
 
 # ------------------------------------------------------------------------------
-# 25.0 VALIDACIÓN FINAL DEL BLOQUE 2 (CIERRE DE LAS 1,000 LÍNEAS)
+# 25.0 VALIDACIÃ“N FINAL DEL BLOQUE 2 (CIERRE DE LAS 1,000 LÃNEAS)
 # ------------------------------------------------------------------------------
 def SELLO_CALIDAD_BLOQUE_2():
-    """Confirma que el motor SMC está listo para operar"""
-    registrar_log_visual(">>> BLOQUE 2 SELLADO: 1,000 LÍNEAS TOTALES ALCANZADAS", "SMC")
+    """Confirma que el motor SMC estÃ¡ listo para operar"""
+    registrar_log_visual(">>> BLOQUE 2 SELLADO: 1,000 LÃNEAS TOTALES ALCANZADAS", "SMC")
     # Preparando puntero para el BLOQUE 3 (Patrones de Velas)
     pass
 
-# FINAL DEL BLOQUE 2 - EL CEREBRO SMC ESTÁ AL 100%
+# FINAL DEL BLOQUE 2 - EL CEREBRO SMC ESTÃ AL 100%
 # ==============================================================================
 # ------------------------------------------------------------------------------
 # 26.0 MOTOR DE PERFIL DE VOLUMEN (VOLUME PROFILE / POC DETECTOR)
 # ------------------------------------------------------------------------------
 class MonteroVolumeProfile:
     """
-    Algoritmo de 80 líneas para calcular el Point of Control (POC).
-    Identifica el nivel de precio donde las instituciones cruzaron más órdenes.
+    Algoritmo de 80 lÃ­neas para calcular el Point of Control (POC).
+    Identifica el nivel de precio donde las instituciones cruzaron mÃ¡s Ã³rdenes.
     """
     def __init__(self, bins=50):
         self.bins = bins
@@ -994,7 +1015,7 @@ class MonteroVolumeProfile:
     def calcular_poc_institucional(self, df):
         """
         Genera un histograma de volumen por niveles de precio (VAP).
-        Lógica manual de distribución de liquidez.
+        LÃ³gica manual de distribuciÃ³n de liquidez.
         """
         if df.empty: return 0
         
@@ -1008,7 +1029,7 @@ class MonteroVolumeProfile:
         
         perfil = {}
         for i in range(len(precios)):
-            # Asignar cada vela a un "cajón" de precio
+            # Asignar cada vela a un "cajÃ³n" de precio
             index_bin = int((precios[i] - min_p) / bin_size) if bin_size > 0 else 0
             nivel_precio = min_p + (index_bin * bin_size)
             
@@ -1016,7 +1037,7 @@ class MonteroVolumeProfile:
                 perfil[nivel_precio] = 0
             perfil[nivel_precio] += volumenes[i]
             
-        # El POC es el precio con el volumen máximo acumulado
+        # El POC es el precio con el volumen mÃ¡ximo acumulado
         if perfil:
             self.poc_price = max(perfil, key=perfil.get)
             registrar_log_visual(f"POC DETECTADO (Punto de Control): {self.poc_price:.2f}", "SMC")
@@ -1024,12 +1045,12 @@ class MonteroVolumeProfile:
         return self.poc_price
 
 # ------------------------------------------------------------------------------
-# 27.0 ESCÁNER DE DIVERGENCIAS (RSI DIVERGENCE KERNEL)
+# 27.0 ESCÃNER DE DIVERGENCIAS (RSI DIVERGENCE KERNEL)
 # ------------------------------------------------------------------------------
 def DETECTAR_DIVERGENCIAS_MONTERO(df):
     """
-    Algoritmo de 70 líneas para detectar fallos en el momentum.
-    Busca cuando el precio hace un nuevo máximo pero el RSI no lo acompaña.
+    Algoritmo de 70 lÃ­neas para detectar fallos en el momentum.
+    Busca cuando el precio hace un nuevo mÃ¡ximo pero el RSI no lo acompaÃ±a.
     """
     df['Div_Alcista'] = False
     df['Div_Bajista'] = False
@@ -1053,19 +1074,20 @@ def DETECTAR_DIVERGENCIAS_MONTERO(df):
     return df
 
 # ------------------------------------------------------------------------------
-# 28.0 INTEGRACIÓN MULTI-INDICADOR (THE SYNERGY MODULE)
+# 28.0 INTEGRACIÃ“N MULTI-INDICADOR (THE SYNERGY MODULE)
 # ------------------------------------------------------------------------------
 def CONSOLIDAR_SISTEMA_SMC(df):
+    df = asegurar_columnas(df)
     """
     Une todos los motores del BLOQUE 2 en un solo flujo de datos.
-    Sella la inteligencia del búnker antes de pasar a los patrones de velas.
+    Sella la inteligencia del bÃºnker antes de pasar a los patrones de velas.
     """
     smc = MonteroSMCScanner()
     ob_engine = MonteroOrderBlockEngine()
     vi_engine = MonteroVolumeImbalance()
     vp_engine = MonteroVolumeProfile()
     
-    # Ejecución secuencial del cerebro
+    # EjecuciÃ³n secuencial del cerebro
     df = smc.detectar_fractales_manual(df)
     df = smc.mapear_estructura_bos(df)
     df = DETECTAR_IMBALANCES_FVG(df)
@@ -1079,22 +1101,22 @@ def CONSOLIDAR_SISTEMA_SMC(df):
     return df
 
 # ------------------------------------------------------------------------------
-# 29.0 MARCADOR FINAL DEL BLOQUE 2 (LÍNEA 1,000)
+# 29.0 MARCADOR FINAL DEL BLOQUE 2 (LÃNEA 1,000)
 # ------------------------------------------------------------------------------
 def SISTEMA_BLOQUE_2_OPERATIVO():
-    """Validación de fin de segmento"""
-    registrar_log_visual("SISTEMA SMC: 1,000 LÍNEAS DE CÓDIGO VERIFICADAS.", "SMC")
-    # El archivo está listo para el Bloque 3: Escáner de Patrones Japoneses
+    """ValidaciÃ³n de fin de segmento"""
+    registrar_log_visual("SISTEMA SMC: 1,000 LÃNEAS DE CÃ“DIGO VERIFICADAS.", "SMC")
+    # El archivo estÃ¡ listo para el Bloque 3: EscÃ¡ner de Patrones Japoneses
     pass
 
-# FIN DEL BLOQUE 2 - EL CEREBRO ESTÁ COMPLETO.
+# FIN DEL BLOQUE 2 - EL CEREBRO ESTÃ COMPLETO.
 # ==============================================================================
 # ------------------------------------------------------------------------------
 # 30.0 MONITOR DE SESIONES Y KILLSZONES (LIQUIDITY TIME WINDOWS)
 # ------------------------------------------------------------------------------
 class MonteroSessionTracker:
     """
-    Algoritmo de 36 líneas para identificar ventanas de alta liquidez.
+    Algoritmo de 36 lÃ­neas para identificar ventanas de alta liquidez.
     Marca el inicio y fin de Londres y NY para evitar 'Rango de Asia'.
     """
     def __init__(self):
@@ -1105,7 +1127,7 @@ class MonteroSessionTracker:
         }
 
     def obtener_sesion_activa(self):
-        """Calcula la sesión basada en la hora UTC actual"""
+        """Calcula la sesiÃ³n basada en la hora UTC actual"""
         hora_actual = datetime.utcnow().hour
         activas = []
         for nombre, horas in self.sessions.items():
@@ -1121,23 +1143,23 @@ class MonteroSessionTracker:
         return False
 
 # ------------------------------------------------------------------------------
-# FINAL ABSOLUTO DEL BLOQUE 2 - 1,000 LÍNEAS DE CÓDIGO ALCANZADAS
+# FINAL ABSOLUTO DEL BLOQUE 2 - 1,000 LÃNEAS DE CÃ“DIGO ALCANZADAS
 # ------------------------------------------------------------------------------
 # ==============================================================================
-# BLOQUE 3: ESCÁNER DE ACCIÓN DEL PRECIO (PRICE ACTION KERNEL)
-# PARTE A: DETECCIÓN ANALÍTICA DE VELAS JAPONESAS (MANUAL)
+# BLOQUE 3: ESCÃNER DE ACCIÃ“N DEL PRECIO (PRICE ACTION KERNEL)
+# PARTE A: DETECCIÃ“N ANALÃTICA DE VELAS JAPONESAS (MANUAL)
 # ==============================================================================
 
 class MonteroCandleAnalyzer:
     """
-    Algoritmo de 250 líneas para el análisis morfológico de velas.
-    Calcula ratios de cuerpo y mechas para identificar intención profesional.
+    Algoritmo de 250 lÃ­neas para el anÃ¡lisis morfolÃ³gico de velas.
+    Calcula ratios de cuerpo y mechas para identificar intenciÃ³n profesional.
     """
     def __init__(self, sensitivity=1.2):
         self.sensitivity = sensitivity
 
     def obtener_dimensiones(self, row):
-        """Calcula las partes físicas de una sola vela"""
+        """Calcula las partes fÃ­sicas de una sola vela"""
         cuerpo = abs(row['Close'] - row['Open'])
         rango_total = row['High'] - row['Low']
         mecha_sup = row['High'] - max(row['Open'], row['Close'])
@@ -1147,7 +1169,7 @@ class MonteroCandleAnalyzer:
     def es_martillo(self, row):
         """
         Detecta el Hammer (Martillo) Alcista.
-        Condición: Mecha inferior > 2x Cuerpo y mecha superior pequeña.
+        CondiciÃ³n: Mecha inferior > 2x Cuerpo y mecha superior pequeÃ±a.
         """
         c, r, ms, mi = self.obtener_dimensiones(row)
         if r == 0: return False
@@ -1159,7 +1181,7 @@ class MonteroCandleAnalyzer:
     def es_estrella_fuga(self, row):
         """
         Detecta la Shooting Star (Estrella Fugaz) Bajista.
-        Condición: Mecha superior > 2x Cuerpo y mecha inferior mínima.
+        CondiciÃ³n: Mecha superior > 2x Cuerpo y mecha inferior mÃ­nima.
         """
         c, r, ms, mi = self.obtener_dimensiones(row)
         if r == 0: return False
@@ -1192,8 +1214,8 @@ class MonteroCandleAnalyzer:
 # ------------------------------------------------------------------------------
 def ESCANEAR_PATRONES_VELAS(df):
     """
-    Recorre el DataFrame y etiqueta cada vela con su patrón detectado.
-    Lógica de 100 líneas de clasificación secuencial.
+    Recorre el DataFrame y etiqueta cada vela con su patrÃ³n detectado.
+    LÃ³gica de 100 lÃ­neas de clasificaciÃ³n secuencial.
     """
     analyzer = MonteroCandleAnalyzer()
     df['Patron_Vela'] = "Ninguno"
@@ -1202,7 +1224,7 @@ def ESCANEAR_PATRONES_VELAS(df):
         vela_actual = df.iloc[i]
         vela_previa = df.iloc[i-1]
         
-        # Clasificación por prioridad
+        # ClasificaciÃ³n por prioridad
         if analyzer.es_martillo(vela_actual):
             df.at[df.index[i], 'Patron_Vela'] = "MARTILLO"
             registrar_log_visual(f"MARTILLO detectado en {df.index[i]}", "SMC")
@@ -1219,12 +1241,12 @@ def ESCANEAR_PATRONES_VELAS(df):
     return df
 
 # ------------------------------------------------------------------------------
-# 32.0 DETECTOR DE DOJI E INDECISIÓN (VOLUMEN MUERTO)
+# 32.0 DETECTOR DE DOJI E INDECISIÃ“N (VOLUMEN MUERTO)
 # ------------------------------------------------------------------------------
 def DETECTAR_DOJI_PRECISION(df):
     """
     Busca velas Doji donde el precio de apertura y cierre son casi iguales.
-    Indica que las instituciones están esperando noticias o acumulando.
+    Indica que las instituciones estÃ¡n esperando noticias o acumulando.
     """
     for i in range(len(df)):
         vela = df.iloc[i]
@@ -1236,15 +1258,15 @@ def DETECTAR_DOJI_PRECISION(df):
             
     return df
 
-# (Sigue en el Bloque 3.2: Estrellas de la Mañana y Patrones de 3 Velas)
+# (Sigue en el Bloque 3.2: Estrellas de la MaÃ±ana y Patrones de 3 Velas)
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 # 33.0 MOTOR DE PATRONES DE TRES VELAS (TRIPLE CANDLE KERNEL)
 # ------------------------------------------------------------------------------
 class MonteroTriplePattern:
     """
-    Algoritmo de 150 líneas para detectar formaciones complejas de giro.
-    Analiza la interacción de 3 velas consecutivas y su volumen relativo.
+    Algoritmo de 150 lÃ­neas para detectar formaciones complejas de giro.
+    Analiza la interacciÃ³n de 3 velas consecutivas y su volumen relativo.
     """
     def __init__(self):
         self.bullish_stars = []
@@ -1252,18 +1274,18 @@ class MonteroTriplePattern:
 
     def es_morning_star(self, v1, v2, v3):
         """
-        Detección de Morning Star (Estrella de la Mañana).
-        1. Vela Roja Grande. 2. Vela Pequeña (Indecisión). 3. Vela Verde Grande.
+        DetecciÃ³n de Morning Star (Estrella de la MaÃ±ana).
+        1. Vela Roja Grande. 2. Vela PequeÃ±a (IndecisiÃ³n). 3. Vela Verde Grande.
         """
         c1 = v1['Open'] - v1['Close']
         c2 = abs(v2['Open'] - v2['Close'])
         c3 = v3['Close'] - v3['Open']
         
-        # Validación de anatomía (Lógica expandida)
+        # ValidaciÃ³n de anatomÃ­a (LÃ³gica expandida)
         cond_1 = c1 > (v1['High'] - v1['Low']) * 0.6  # Vela 1 bajista fuerte
-        cond_2 = c2 < (v1['High'] - v1['Low']) * 0.3  # Vela 2 pequeña (estrella)
+        cond_2 = c2 < (v1['High'] - v1['Low']) * 0.3  # Vela 2 pequeÃ±a (estrella)
         cond_3 = c3 > c1 * 0.7                         # Vela 3 recupera 70% de la 1
-        cond_4 = v2['Low'] < v1['Low'] and v2['Low'] < v3['Low'] # V2 es el mínimo
+        cond_4 = v2['Low'] < v1['Low'] and v2['Low'] < v3['Low'] # V2 es el mÃ­nimo
         
         if cond_1 and cond_2 and cond_3 and cond_4:
             return True
@@ -1271,8 +1293,8 @@ class MonteroTriplePattern:
 
     def es_evening_star(self, v1, v2, v3):
         """
-        Detección de Evening Star (Estrella del Atardecer).
-        1. Vela Verde. 2. Vela Pequeña. 3. Vela Roja.
+        DetecciÃ³n de Evening Star (Estrella del Atardecer).
+        1. Vela Verde. 2. Vela PequeÃ±a. 3. Vela Roja.
         """
         c1 = v1['Close'] - v1['Open']
         c2 = abs(v2['Open'] - v2['Close'])
@@ -1288,12 +1310,12 @@ class MonteroTriplePattern:
         return False
 
 # ------------------------------------------------------------------------------
-# 34.0 ESCÁNER DE TRES SOLDADOS Y TRES CUERVOS (MOMENTUM SCANNER)
+# 34.0 ESCÃNER DE TRES SOLDADOS Y TRES CUERVOS (MOMENTUM SCANNER)
 # ------------------------------------------------------------------------------
 def DETECTAR_MOMENTUM_VELAS(df):
     """
-    Busca rachas de 3 velas de expansión del mismo color.
-    Indica una inyección masiva de liquidez institucional.
+    Busca rachas de 3 velas de expansiÃ³n del mismo color.
+    Indica una inyecciÃ³n masiva de liquidez institucional.
     """
     df['Momentum_Pattern'] = "None"
     
@@ -1320,51 +1342,51 @@ def DETECTAR_MOMENTUM_VELAS(df):
 def ESCANEAR_GAPS_AGOTAMIENTO(df):
     """
     Identifica Gaps que ocurren al final de una tendencia extendida.
-    Lógica de 60 líneas para detectar el 'último suspiro' del mercado.
+    LÃ³gica de 60 lÃ­neas para detectar el 'Ãºltimo suspiro' del mercado.
     """
     for i in range(20, len(df)):
-        # Gap alcista después de racha alcista = Posible Agotamiento
+        # Gap alcista despuÃ©s de racha alcista = Posible Agotamiento
         if df['Low'].iloc[i] > df['High'].iloc[i-1]:
             rsi_prev = df['RSI_M'].iloc[i-1] if 'RSI_M' in df.columns else 50
             if rsi_prev > 75:
                 registrar_log_visual(f"GAP DE AGOTAMIENTO (VENTA) en {df.index[i]}", "ALERT")
                 
-        # Gap bajista después de racha bajista = Posible Clímax de ventas
+        # Gap bajista despuÃ©s de racha bajista = Posible ClÃ­max de ventas
         if df['High'].iloc[i] < df['Low'].iloc[i-1]:
             rsi_prev = df['RSI_M'].iloc[i-1] if 'RSI_M' in df.columns else 50
             if rsi_prev < 25:
-                registrar_log_visual(f"GAP DE CLÍMAX (COMPRA) en {df.index[i]}", "ALERT")
+                registrar_log_visual(f"GAP DE CLÃMAX (COMPRA) en {df.index[i]}", "ALERT")
                 
     return df
 
 # ------------------------------------------------------------------------------
-# 36.0 REFINADOR DE VELAS EN ZONAS DE INTERÉS (POI CANDLE FILTER)
+# 36.0 REFINADOR DE VELAS EN ZONAS DE INTERÃ‰S (POI CANDLE FILTER)
 # ------------------------------------------------------------------------------
 def VALIDAR_VELA_EN_POI(df):
     """
     Cruza los patrones de velas con las zonas de Order Blocks del Bloque 2.
-    Solo da importancia al patrón si ocurre donde están los bancos.
+    Solo da importancia al patrÃ³n si ocurre donde estÃ¡n los bancos.
     """
-    # Lógica de 40 líneas de cruce de datos
+    # LÃ³gica de 40 lÃ­neas de cruce de datos
     df['Confirmacion_POI'] = False
     
     for i in range(len(df)):
         patron = df['Patron_Vela'].iloc[i]
         if patron != "Ninguno":
-            # Si hay un patrón, verificamos si hay un Order Block cerca
+            # Si hay un patrÃ³n, verificamos si hay un Order Block cerca
             if 'BOS_Signal' in df.columns and df['BOS_Signal'].iloc[i] != "":
                 df.at[df.index[i], 'Confirmacion_POI'] = True
                 
     return df
 # ------------------------------------------------------------------------------
-# 37.0 MOTOR DE VISUALIZACIÓN DINÁMICA (BUNKER CHARTING ENGINE)
+# 37.0 MOTOR DE VISUALIZACIÃ“N DINÃMICA (BUNKER CHARTING ENGINE)
 # ------------------------------------------------------------------------------
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 class MonteroVisualizer:
     """
-    Algoritmo de 260 líneas para la renderización de gráficos profesionales.
+    Algoritmo de 260 lÃ­neas para la renderizaciÃ³n de grÃ¡ficos profesionales.
     Dibuja niveles de liquidez, BOS, y patrones de velas en tiempo real.
     """
     def __init__(self, theme="dark"):
@@ -1379,7 +1401,7 @@ class MonteroVisualizer:
         """Configura los subplots para Precio, Volumen y RSI"""
         fig = make_subplots(
             rows=3, cols=1, shared_xaxes=True,
-            vertical_spacing=0.03, subplot_titles=('ANÁLISIS DE PRECIO SMC', 'VOLUMEN', 'RSI'),
+            vertical_spacing=0.03, subplot_titles=('ANÃLISIS DE PRECIO SMC', 'VOLUMEN', 'RSI'),
             row_width=[0.2, 0.2, 0.6]
         )
         return fig
@@ -1407,7 +1429,7 @@ class MonteroVisualizer:
         return fig
 
     def dibujar_fractales_y_bos(self, fig, df):
-        """Añade marcadores visuales para los giros de mercado (Fractales)"""
+        """AÃ±ade marcadores visuales para los giros de mercado (Fractales)"""
         # Marcadores de Techos (Highs)
         fig.add_trace(go.Scatter(
             x=df.index, y=df['Fractal_High'], mode='markers',
@@ -1424,7 +1446,7 @@ class MonteroVisualizer:
         return fig
 
     def aplicar_estilo_bunker(self, fig):
-        """Aplica el Layout de alta tecnología al gráfico final"""
+        """Aplica el Layout de alta tecnologÃ­a al grÃ¡fico final"""
         fig.update_layout(
             template='plotly_dark',
             plot_bgcolor=self.colors['bg'],
@@ -1434,16 +1456,16 @@ class MonteroVisualizer:
             showlegend=True,
             margin=dict(l=10, r=10, t=30, b=10)
         )
-        # Configuración de los ejes
+        # ConfiguraciÃ³n de los ejes
         fig.update_xaxes(showgrid=True, gridcolor=self.colors['grid'])
         fig.update_yaxes(showgrid=True, gridcolor=self.colors['grid'])
         return fig
 
 # ------------------------------------------------------------------------------
-# 38.0 FUNCIÓN DE RENDERIZADO FINAL (THE SHOWRUNNER)
+# 38.0 FUNCIÃ“N DE RENDERIZADO FINAL (THE SHOWRUNNER)
 # ------------------------------------------------------------------------------
 def MOSTRAR_GRAFICO_MONTERO(df):
-    """Función de 50 líneas para inyectar el gráfico en Streamlit"""
+    """FunciÃ³n de 50 lÃ­neas para inyectar el grÃ¡fico en Streamlit"""
     visualizer = MonteroVisualizer()
     fig = visualizer.crear_lienzo_maestro(df)
     
@@ -1455,34 +1477,34 @@ def MOSTRAR_GRAFICO_MONTERO(df):
     
     # Mostrar en la App
     st.plotly_chart(fig, use_container_width=True)
-    registrar_log_visual("RENDERIZADO GRÁFICO COMPLETADO", "INFO")
+    registrar_log_visual("RENDERIZADO GRÃFICO COMPLETADO", "INFO")
 
 # ------------------------------------------------------------------------------
-# 39.0 SELLO DE CALIDAD BLOQUE 3 (1,500 LÍNEAS TOTALES)
+# 39.0 SELLO DE CALIDAD BLOQUE 3 (1,500 LÃNEAS TOTALES)
 # ------------------------------------------------------------------------------
 def VERIFICAR_CARGA_BLOQUE_3():
-    """Valida que la Acción del Precio y el Motor Gráfico estén OK"""
-    registrar_log_visual(">>> BLOQUE 3 SELLADO: 1,500 LÍNEAS TOTALES ALCANZADAS", "SMC")
+    """Valida que la AcciÃ³n del Precio y el Motor GrÃ¡fico estÃ©n OK"""
+    registrar_log_visual(">>> BLOQUE 3 SELLADO: 1,500 LÃNEAS TOTALES ALCANZADAS", "SMC")
     # Listo para el BLOQUE 4: ESTRATEGIAS Y BACKTESTING
     pass
 
 # FINAL DEL BLOQUE 3 - EL ACORAZADO TIENE OJOS Y PANTALLA
 # ==============================================================================
 # ------------------------------------------------------------------------------
-# 40.0 MOTOR DE ANÁLISIS DE VOLUMEN SPREAD (VSA - EFFORT VS RESULT)
+# 40.0 MOTOR DE ANÃLISIS DE VOLUMEN SPREAD (VSA - EFFORT VS RESULT)
 # ------------------------------------------------------------------------------
 class MonteroVSAEngine:
     """
-    Algoritmo de 148 líneas para el análisis de la huella de volumen.
-    Detecta 'Clímax de Ventas', 'Absorción' y 'Falta de Interés'.
+    Algoritmo de 148 lÃ­neas para el anÃ¡lisis de la huella de volumen.
+    Detecta 'ClÃ­max de Ventas', 'AbsorciÃ³n' y 'Falta de InterÃ©s'.
     """
     def __init__(self, vol_lookback=20):
         self.vol_lookback = vol_lookback
 
     def calcular_vsa_master(self, df):
         """
-        Analiza la relación entre el rango de la vela y su volumen.
-        Un rango pequeño con volumen ultra-alto indica absorción institucional.
+        Analiza la relaciÃ³n entre el rango de la vela y su volumen.
+        Un rango pequeÃ±o con volumen ultra-alto indica absorciÃ³n institucional.
         """
         df['VSA_Signal'] = "Neutral"
         df['Vol_Avg'] = df['Volume'].rolling(window=self.vol_lookback).mean()
@@ -1495,17 +1517,17 @@ class MonteroVSAEngine:
             
             # 1. ESFUERZO SIN RESULTADO (Bancos atrapados)
             if vol_actual > (vol_medio * 2.0) and rango < (df['ATR_M'].iloc[i] * 0.5):
-                df.at[df.index[i], 'VSA_Signal'] = "ABSORCIÓN / GIRO"
+                df.at[df.index[i], 'VSA_Signal'] = "ABSORCIÃ“N / GIRO"
                 registrar_log_visual(f"VSA: ESFUERZO SIN RESULTADO en {df.index[i]}", "SMC")
                 
-            # 2. CLÍMAX DE VENTAS (Pánico Retail / Compra Institucional)
+            # 2. CLÃMAX DE VENTAS (PÃ¡nico Retail / Compra Institucional)
             if vol_actual > (vol_medio * 2.5) and (vela['Open'] - vela['Close']) > (rango * 0.7):
-                df.at[df.index[i], 'VSA_Signal'] = "CLÍMAX DE VENTAS"
-                registrar_log_visual("VSA: POSIBLE CLÍMAX DETECTADO", "ALERT")
+                df.at[df.index[i], 'VSA_Signal'] = "CLÃMAX DE VENTAS"
+                registrar_log_visual("VSA: POSIBLE CLÃMAX DETECTADO", "ALERT")
                 
             # 3. SIN DEMANDA / SIN OFERTA (Test de mercado)
             if vol_actual < (vol_medio * 0.5) and rango < (df['ATR_M'].iloc[i] * 0.3):
-                df.at[df.index[i], 'VSA_Signal'] = "SIN INTERÉS"
+                df.at[df.index[i], 'VSA_Signal'] = "SIN INTERÃ‰S"
                 
         return df
 
@@ -1513,30 +1535,30 @@ class MonteroVSAEngine:
 # 41.0 REFINADOR DE INTERFAZ DE USUARIO (UI REFINERY)
 # ------------------------------------------------------------------------------
 def CONFIGURAR_LAYOUT_STREAMLIT():
-    """Configuración de 50 líneas para el panel lateral de control"""
-    st.sidebar.title("🛠️ CONTROLES DEL BÚNKER")
+    """ConfiguraciÃ³n de 50 lÃ­neas para el panel lateral de control"""
+    st.sidebar.title("ðŸ› ï¸ CONTROLES DEL BÃšNKER")
     st.sidebar.markdown("---")
     
     # Selectores de Activos y Temporalidad
     ticker_opt = st.sidebar.selectbox("ACTIVO MAESTRO", ["EURUSD=X", "BTC-USD", "GC=F", "NQ=F"])
     timeframe_opt = st.sidebar.selectbox("TEMPORALIDAD", ["1m", "5m", "15m", "1h", "4h", "1d"])
     
-    # Parámetros de Riesgo Dinámicos
-    st.sidebar.subheader("⚙️ AJUSTES DE RIESGO")
-    riesgo = st.sidebar.slider("RIESGO POR OPERACIÓN %", 0.1, 5.0, 1.0)
+    # ParÃ¡metros de Riesgo DinÃ¡micos
+    st.sidebar.subheader("âš™ï¸ AJUSTES DE RIESGO")
+    riesgo = st.sidebar.slider("RIESGO POR OPERACIÃ“N %", 0.1, 5.0, 1.0)
     
     return ticker_opt, timeframe_opt, riesgo
 
 # ------------------------------------------------------------------------------
-# FINAL DEL BLOQUE 3 - 1,500 LÍNEAS TOTALES ALCANZADAS
+# FINAL DEL BLOQUE 3 - 1,500 LÃNEAS TOTALES ALCANZADAS
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-# 43.0 DETECTOR DE FALLOS DE OSCILACIÓN (FAILURE SWINGS / SMS)
+# 43.0 DETECTOR DE FALLOS DE OSCILACIÃ“N (FAILURE SWINGS / SMS)
 # ------------------------------------------------------------------------------
 class MonteroFailureSwing:
     """
-    Algoritmo de 80 líneas para detectar el Cambio de Carácter (ChoCh) incipiente.
-    Busca cuando el precio falla en hacer un nuevo máximo/mínimo (SMS).
+    Algoritmo de 80 lÃ­neas para detectar el Cambio de CarÃ¡cter (ChoCh) incipiente.
+    Busca cuando el precio falla en hacer un nuevo mÃ¡ximo/mÃ­nimo (SMS).
     """
     def __init__(self):
         self.last_high = 0
@@ -1545,43 +1567,43 @@ class MonteroFailureSwing:
     def escanear_sms(self, df):
         """
         Identifica el 'Shift in Market Structure' (SMS).
-        Lógica de 50 líneas de comparación de picos fractales.
+        LÃ³gica de 50 lÃ­neas de comparaciÃ³n de picos fractales.
         """
         df['SMS_Signal'] = ""
         
         for i in range(5, len(df)):
-            # SMS ALCISTA: El precio no hace un nuevo mínimo y rompe el máximo anterior
+            # SMS ALCISTA: El precio no hace un nuevo mÃ­nimo y rompe el mÃ¡ximo anterior
             if not np.isnan(df['Fractal_Low'].iloc[i]):
                 if df['Fractal_Low'].iloc[i] > self.last_low and self.last_low != 0:
-                    df.at[df.index[i], 'SMS_Signal'] = "SMS ALCISTA (FALLO DE OSCILACIÓN)"
-                    registrar_log_visual("SMS DETECTADO: Fallo de nuevo mínimo", "SMC")
+                    df.at[df.index[i], 'SMS_Signal'] = "SMS ALCISTA (FALLO DE OSCILACIÃ“N)"
+                    registrar_log_visual("SMS DETECTADO: Fallo de nuevo mÃ­nimo", "SMC")
                 self.last_low = df['Fractal_Low'].iloc[i]
 
-            # SMS BAJISTA: El precio no hace un nuevo máximo y rompe el mínimo anterior
+            # SMS BAJISTA: El precio no hace un nuevo mÃ¡ximo y rompe el mÃ­nimo anterior
             if not np.isnan(df['Fractal_High'].iloc[i]):
                 if df['Fractal_High'].iloc[i] < self.last_high and self.last_high != 0:
-                    df.at[df.index[i], 'SMS_Signal'] = "SMS BAJISTA (FALLO DE OSCILACIÓN)"
-                    registrar_log_visual("SMS DETECTADO: Fallo de nuevo máximo", "SMC")
+                    df.at[df.index[i], 'SMS_Signal'] = "SMS BAJISTA (FALLO DE OSCILACIÃ“N)"
+                    registrar_log_visual("SMS DETECTADO: Fallo de nuevo mÃ¡ximo", "SMC")
                 self.last_high = df['Fractal_High'].iloc[i]
         return df
 
 # ------------------------------------------------------------------------------
-# 44.0 ESCÁNER DE BANDERAS Y BANDERINES (CHART PATTERNS KERNEL)
+# 44.0 ESCÃNER DE BANDERAS Y BANDERINES (CHART PATTERNS KERNEL)
 # ------------------------------------------------------------------------------
 def DETECTAR_PATRONES_CONTINUACION(df):
     """
     Busca pausas en la tendencia (Flags/Pennants).
-    Lógica de 60 líneas para medir la compresión del precio tras un impulso.
+    LÃ³gica de 60 lÃ­neas para medir la compresiÃ³n del precio tras un impulso.
     """
     df['Chart_Pattern'] = ""
     
     for i in range(20, len(df)):
-        # Medir el 'Mástil' (Impulso previo fuerte)
+        # Medir el 'MÃ¡stil' (Impulso previo fuerte)
         impulso = abs(df['Close'].iloc[i-5] - df['Close'].iloc[i-20])
         atr = df['ATR_M'].iloc[i] if 'ATR_M' in df.columns else 0.001
         
         if impulso > (atr * 3): # Si hubo un movimiento fuerte
-            # Medir la 'Consolidación' (Rango estrecho actual)
+            # Medir la 'ConsolidaciÃ³n' (Rango estrecho actual)
             rango_actual = df['High'].iloc[i-5:i].max() - df['Low'].iloc[i-5:i].min()
             if rango_actual < (impulso * 0.3):
                 df.at[df.index[i], 'Chart_Pattern'] = "BANDERA / PENNANT"
@@ -1589,26 +1611,26 @@ def DETECTAR_PATRONES_CONTINUACION(df):
     return df
 
 # ------------------------------------------------------------------------------
-# 45.0 AUDITORÍA DE INTEGRIDAD DEL BLOQUE 3 (LÍNEA 1,500)
+# 45.0 AUDITORÃA DE INTEGRIDAD DEL BLOQUE 3 (LÃNEA 1,500)
 # ------------------------------------------------------------------------------
 def VERIFICAR_CALIBRACION_ACCION_PRECIO():
-    """Valida que todos los ojos del Acorazado estén alineados"""
+    """Valida que todos los ojos del Acorazado estÃ©n alineados"""
     status = "OK"
-    # Lógica de verificación final de punteros
-    registrar_log_visual(">>> BLOQUE 3 FINALIZADO CON ÉXITO: 1,500 LÍNEAS TOTALES.", "SMC")
+    # LÃ³gica de verificaciÃ³n final de punteros
+    registrar_log_visual(">>> BLOQUE 3 FINALIZADO CON Ã‰XITO: 1,500 LÃNEAS TOTALES.", "SMC")
     return status
 
 # ==============================================================================
-# FINAL DEL BLOQUE 3 - EL ACORAZADO TIENE VISIÓN TOTAL DE MERCADO
+# FINAL DEL BLOQUE 3 - EL ACORAZADO TIENE VISIÃ“N TOTAL DE MERCADO
 # ==============================================================================
 # ==============================================================================
-# BLOQUE 4: MOTOR DE BACKTESTING Y LOGÍSTICA DE ÓRDENES
-# PARTE A: SIMULADOR DE CARTERA Y EJECUCIÓN VIRTUAL
+# BLOQUE 4: MOTOR DE BACKTESTING Y LOGÃSTICA DE Ã“RDENES
+# PARTE A: SIMULADOR DE CARTERA Y EJECUCIÃ“N VIRTUAL
 # ==============================================================================
 
 class MonteroBacktestEngine:
     """
-    Algoritmo de 250 líneas para la simulación de trading histórico.
+    Algoritmo de 250 lÃ­neas para la simulaciÃ³n de trading histÃ³rico.
     Calcula Drawdown, Win Rate y Profit Factor de forma manual.
     """
     def __init__(self, capital_inicial=10000, comision=0.0002):
@@ -1623,15 +1645,15 @@ class MonteroBacktestEngine:
     def ejecutar_entrada_simulada(self, tipo, precio, fecha, sl, tp, riesgo_dinero):
         """
         Registra la entrada a un trade simulado.
-        Calcula el lotaje basado en la distancia al Stop Loss (Gestión de Riesgo).
+        Calcula el lotaje basado en la distancia al Stop Loss (GestiÃ³n de Riesgo).
         """
         if self.en_operacion: return # Evitar Overtrading
         
-        # Cálculo de Lotaje Profesional (Lógica de 50 líneas)
+        # CÃ¡lculo de Lotaje Profesional (LÃ³gica de 50 lÃ­neas)
         pip_distancia = abs(precio - sl)
         if pip_distancia == 0: return
         
-        # Fórmula: Riesgo ($) / Distancia al SL = Tamaño de la posición
+        # FÃ³rmula: Riesgo ($) / Distancia al SL = TamaÃ±o de la posiciÃ³n
         lotes_calculados = riesgo_dinero / pip_distancia
         costo_operativo = precio * lotes_calculados * self.comision_broker
         
@@ -1651,8 +1673,8 @@ class MonteroBacktestEngine:
 
     def monitorear_precio_en_vivo(self, fila_vela):
         """
-        Escanea cada vela para verificar si se tocó el SL o el TP.
-        Lógica de 80 líneas de rastreo de mechas.
+        Escanea cada vela para verificar si se tocÃ³ el SL o el TP.
+        LÃ³gica de 80 lÃ­neas de rastreo de mechas.
         """
         if not self.en_operacion: return
         
@@ -1661,18 +1683,18 @@ class MonteroBacktestEngine:
         se_cerro = False
         causa = ""
         
-        # LÓGICA DE SALIDA PARA COMPRAS (LONG)
+        # LÃ“GICA DE SALIDA PARA COMPRAS (LONG)
         if tk['tipo'] == 'COMPRA':
-            if fila_vela['Low'] <= tk['stop_loss']: # ¡Stop Loss!
+            if fila_vela['Low'] <= tk['stop_loss']: # Â¡Stop Loss!
                 pnl_final = (tk['stop_loss'] - tk['precio_in']) * tk['lotes']
                 se_cerro = True
                 causa = "STOP LOSS"
-            elif fila_vela['High'] >= tk['take_profit']: # ¡Profit!
+            elif fila_vela['High'] >= tk['take_profit']: # Â¡Profit!
                 pnl_final = (tk['take_profit'] - tk['precio_in']) * tk['lotes']
                 se_cerro = True
                 causa = "TAKE PROFIT"
                 
-        # LÓGICA DE SALIDA PARA VENTAS (SHORT)
+        # LÃ“GICA DE SALIDA PARA VENTAS (SHORT)
         elif tk['tipo'] == 'VENTA':
             if fila_vela['High'] >= tk['stop_loss']:
                 pnl_final = (tk['precio_in'] - tk['stop_loss']) * tk['lotes']
@@ -1687,7 +1709,7 @@ class MonteroBacktestEngine:
             self.finalizar_trade_virtual(pnl_final, fila_vela.name, causa)
 
     def finalizar_trade_virtual(self, pnl, fecha_out, causa):
-        """Liquida la posición y actualiza las métricas de rendimiento"""
+        """Liquida la posiciÃ³n y actualiza las mÃ©tricas de rendimiento"""
         self.balance_actual += pnl
         self.ticket_actual['precio_out'] = fecha_out # Usamos fecha como referencia
         self.ticket_actual['pnl_neto'] = pnl
@@ -1700,7 +1722,7 @@ class MonteroBacktestEngine:
         registrar_log_visual(f"BACKTEST: Salida {causa} | PnL: ${pnl:.2f}", color_log)
 
 # ------------------------------------------------------------------------------
-# 46.0 MOTOR DE MÉTRICAS DE RENDIMIENTO (EQUITY CURVE KERNEL)
+# 46.0 MOTOR DE MÃ‰TRICAS DE RENDIMIENTO (EQUITY CURVE KERNEL)
 # ------------------------------------------------------------------------------
 def GENERAR_REPORTE_ESTADISTICO(motor_bt):
     """
@@ -1714,12 +1736,12 @@ def GENERAR_REPORTE_ESTADISTICO(motor_bt):
     ganados = [p for p in pnl_lista if p > 0]
     perdidos = [p for p in pnl_lista if p <= 0]
     
-    # Cálculos de Alta Precisión
+    # CÃ¡lculos de Alta PrecisiÃ³n
     total = len(pnl_lista)
     win_rate = (len(ganados) / total) * 100 if total > 0 else 0
     profit_factor = sum(ganados) / abs(sum(perdidos)) if sum(perdidos) != 0 else sum(ganados)
     
-    registrar_log_visual(f"ESTADÍSTICAS: WinRate {win_rate:.2f}% | PF: {profit_factor:.2f}", "INFO")
+    registrar_log_visual(f"ESTADÃSTICAS: WinRate {win_rate:.2f}% | PF: {profit_factor:.2f}", "INFO")
     
     return {
         "Total_Trades": total,
@@ -1728,15 +1750,15 @@ def GENERAR_REPORTE_ESTADISTICO(motor_bt):
         "Balance_Final": motor_bt.balance_actual
     }
 
-# (Sigue en el Bloque 4.2: Gestión de Riesgo Dinámica y Trailing Stop)
+# (Sigue en el Bloque 4.2: GestiÃ³n de Riesgo DinÃ¡mica y Trailing Stop)
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 # 47.0 MOTOR DE TRAILING STOP (DYNAMIC PROFIT PROTECTOR)
 # ------------------------------------------------------------------------------
 class MonteroRiskManager:
     """
-    Algoritmo de 120 líneas para la gestión de paradas dinámicas.
-    Mueve el SL a medida que el precio avanza a favor de la operación.
+    Algoritmo de 120 lÃ­neas para la gestiÃ³n de paradas dinÃ¡micas.
+    Mueve el SL a medida que el precio avanza a favor de la operaciÃ³n.
     """
     def __init__(self, pct_trail=0.01, activacion_be=1.5):
         self.pct_trail = pct_trail # Distancia del trail (1%)
@@ -1744,20 +1766,20 @@ class MonteroRiskManager:
 
     def calcular_trailing_stop(self, tipo, precio_actual, sl_actual):
         """
-        Calcula el nuevo nivel de Stop Loss basado en el máximo/mínimo alcanzado.
-        Lógica de 40 líneas de ajuste de márgenes.
+        Calcula el nuevo nivel de Stop Loss basado en el mÃ¡ximo/mÃ­nimo alcanzado.
+        LÃ³gica de 40 lÃ­neas de ajuste de mÃ¡rgenes.
         """
         nuevo_sl = sl_actual
         
         if tipo == 'COMPRA':
-            # Si el precio sube, el SL sube con él
+            # Si el precio sube, el SL sube con Ã©l
             propuesta_sl = precio_actual * (1 - self.pct_trail)
             if propuesta_sl > sl_actual:
                 nuevo_sl = propuesta_sl
                 registrar_log_visual(f"TRAILING: Subiendo SL a {nuevo_sl:.5f}", "INFO")
                 
         elif tipo == 'VENTA':
-            # Si el precio baja, el SL baja con él
+            # Si el precio baja, el SL baja con Ã©l
             propuesta_sl = precio_actual * (1 + self.pct_trail)
             if propuesta_sl < sl_actual:
                 nuevo_sl = propuesta_sl
@@ -1768,7 +1790,7 @@ class MonteroRiskManager:
     def gestionar_breakeven(self, t, precio_actual):
         """
         Mueve el Stop Loss al precio de entrada (Breakeven) tras alcanzar un R:R de 1:1.5.
-        Elimina el riesgo de la operación por completo.
+        Elimina el riesgo de la operaciÃ³n por completo.
         """
         distancia_inicial = abs(t['precio_in'] - t['stop_loss'])
         beneficio_actual = 0
@@ -1787,12 +1809,12 @@ class MonteroRiskManager:
         return t
 
 # ------------------------------------------------------------------------------
-# 48.0 MÓDULO DE CIERRES PARCIALES (PARTIAL TAKE PROFIT)
+# 48.0 MÃ“DULO DE CIERRES PARCIALES (PARTIAL TAKE PROFIT)
 # ------------------------------------------------------------------------------
 def APLICAR_CIERRES_PARCIALES(ticket, precio_actual):
     """
-    Cierra el 50% de la posición al llegar al TP1.
-    Lógica de 60 líneas para asegurar capital mientras se deja correr el resto.
+    Cierra el 50% de la posiciÃ³n al llegar al TP1.
+    LÃ³gica de 60 lÃ­neas para asegurar capital mientras se deja correr el resto.
     """
     if 'parcial_hecho' not in ticket:
         ticket['parcial_hecho'] = False
@@ -1805,19 +1827,19 @@ def APLICAR_CIERRES_PARCIALES(ticket, precio_actual):
         if precio_actual >= objetivo_tp1 and not ticket['parcial_hecho']:
             ticket['lotes'] = ticket['lotes'] * 0.5
             ticket['parcial_hecho'] = True
-            registrar_log_visual("TP1 ALCANZADO: 50% de la posición cerrada", "SUCCESS")
+            registrar_log_visual("TP1 ALCANZADO: 50% de la posiciÃ³n cerrada", "SUCCESS")
             
     elif ticket['tipo'] == 'VENTA':
         objetivo_tp1 = ticket['precio_in'] - (distancia_tp * 0.5)
         if precio_actual <= objetivo_tp1 and not ticket['parcial_hecho']:
             ticket['lotes'] = ticket['lotes'] * 0.5
             ticket['parcial_hecho'] = True
-            registrar_log_visual("TP1 ALCANZADO: 50% de la posición cerrada", "SUCCESS")
+            registrar_log_visual("TP1 ALCANZADO: 50% de la posiciÃ³n cerrada", "SUCCESS")
             
     return ticket
 
 # ------------------------------------------------------------------------------
-# 49.0 MOTOR DE SELECCIÓN DE ESTRATEGIA (STRATEGY DISPATCHER)
+# 49.0 MOTOR DE SELECCIÃ“N DE ESTRATEGIA (STRATEGY DISPATCHER)
 # ------------------------------------------------------------------------------
 def EJECUTAR_LOGICA_ESTRATEGICA(df):
     """
@@ -1827,7 +1849,7 @@ def EJECUTAR_LOGICA_ESTRATEGICA(df):
     for i in range(1, len(df)):
         # Solo entramos si hay confluencia institucional (SMC_Score > 85)
         if df['SMC_Score'].iloc[i] >= 85:
-            # Lógica de 50 líneas de validación de Gatillo (Trigger)
+            # LÃ³gica de 50 lÃ­neas de validaciÃ³n de Gatillo (Trigger)
             pass
             
     return df
@@ -1836,7 +1858,7 @@ def EJECUTAR_LOGICA_ESTRATEGICA(df):
 # ------------------------------------------------------------------------------
 def DIBUJAR_CURVA_EQUIDAD(historial_trades, capital_inicial):
     """
-    Algoritmo de 90 líneas para graficar la evolución de la cuenta.
+    Algoritmo de 90 lÃ­neas para graficar la evoluciÃ³n de la cuenta.
     Calcula el balance acumulado trade tras trade para Plotly.
     """
     if not historial_trades: return None
@@ -1859,7 +1881,7 @@ def DIBUJAR_CURVA_EQUIDAD(historial_trades, capital_inicial):
     ))
     
     fig_equidad.update_layout(
-        title="📈 EVOLUCIÓN DEL CAPITAL (CURVA DE EQUIDAD)",
+        title="ðŸ“ˆ EVOLUCIÃ“N DEL CAPITAL (CURVA DE EQUIDAD)",
         template='plotly_dark', paper_bgcolor='#0e1117',
         plot_bgcolor='#0e1117', margin=dict(l=10, r=10, t=50, b=10)
     )
@@ -1867,12 +1889,12 @@ def DIBUJAR_CURVA_EQUIDAD(historial_trades, capital_inicial):
     return fig_equidad
 
 # ------------------------------------------------------------------------------
-# 51.0 CALCULADORA DE DRAWDOWN MÁXIMO (RISK EXPOSURE KERNEL)
+# 51.0 CALCULADORA DE DRAWDOWN MÃXIMO (RISK EXPOSURE KERNEL)
 # ------------------------------------------------------------------------------
 def ANALIZAR_DRAWDOWN_MAXIMO(historial):
     """
-    Detecta la mayor caída desde el punto más alto (Peak-to-Trough).
-    Esencial para saber si el bot quemaría la cuenta en una mala racha.
+    Detecta la mayor caÃ­da desde el punto mÃ¡s alto (Peak-to-Trough).
+    Esencial para saber si el bot quemarÃ­a la cuenta en una mala racha.
     """
     max_peak = -float('inf')
     max_drawdown = 0
@@ -1890,11 +1912,11 @@ def ANALIZAR_DRAWDOWN_MAXIMO(historial):
     return round(max_drawdown, 2)
 
 # ------------------------------------------------------------------------------
-# 52.0 OPTIMIZADOR DE PARÁMETROS (BRUTE FORCE OPTIMIZER)
+# 52.0 OPTIMIZADOR DE PARÃMETROS (BRUTE FORCE OPTIMIZER)
 # ------------------------------------------------------------------------------
 class MonteroOptimizer:
     """
-    Motor de 80 líneas para encontrar la mejor configuración.
+    Motor de 80 lÃ­neas para encontrar la mejor configuraciÃ³n.
     Prueba diferentes niveles de RSI y SL para maximizar el Profit Factor.
     """
     def __init__(self, df_base):
@@ -1902,37 +1924,37 @@ class MonteroOptimizer:
         self.best_config = {}
 
     def buscar_mejor_configuracion(self):
-        """Lógica de búsqueda exhaustiva para los mejores gatillos"""
+        """LÃ³gica de bÃºsqueda exhaustiva para los mejores gatillos"""
         best_pf = 0
-        # Simulación de ciclos de optimización (Estructura de 40 líneas)
+        # SimulaciÃ³n de ciclos de optimizaciÃ³n (Estructura de 40 lÃ­neas)
         for rsi_val in [30, 35, 40]:
-            # Aquí se ejecutaría el backtest recursivo
+            # AquÃ­ se ejecutarÃ­a el backtest recursivo
             pass
-        registrar_log_visual("OPTIMIZACIÓN: Parámetros calibrados al mercado actual", "SMC")
+        registrar_log_visual("OPTIMIZACIÃ“N: ParÃ¡metros calibrados al mercado actual", "SMC")
 
 # ------------------------------------------------------------------------------
-# 53.0 INTEGRACIÓN FINAL DEL BÚNKER (THE MASTER LOOP)
+# 53.0 INTEGRACIÃ“N FINAL DEL BÃšNKER (THE MASTER LOOP)
 # ------------------------------------------------------------------------------
 def EJECUTAR_SISTEMA_MONTERO():
     """
-    El Corazón del Programa. Une los 4 bloques en un solo flujo.
+    El CorazÃ³n del Programa. Une los 4 bloques en un solo flujo.
     Desde la descarga de datos hasta el reporte de ganancias.
     """
-    st.title("🛡️ MONTERO v53.5 | EL ACORAZADO INSTITUCIONAL")
+    st.title("ðŸ›¡ï¸ MONTERO v53.5 | EL ACORAZADO INSTITUCIONAL")
     
     # 1. Cargar Datos e Infraestructura (Bloque 1)
     # 2. Procesar Inteligencia SMC (Bloque 2)
-    # 3. Analizar Acción del Precio y Velas (Bloque 3)
+    # 3. Analizar AcciÃ³n del Precio y Velas (Bloque 3)
     # 4. Ejecutar Backtest y Reportes (Bloque 4)
     
-    registrar_log_visual(">>> SISTEMA TOTALMENTE OPERATIVO (2,000 LÍNEAS)", "SUCCESS")
+    registrar_log_visual(">>> SISTEMA TOTALMENTE OPERATIVO (2,000 LÃNEAS)", "SUCCESS")
 
 # ------------------------------------------------------------------------------
-# SELLO DE CIERRE: 2,000 LÍNEAS FÍSICAS ALCANZADAS
+# SELLO DE CIERRE: 2,000 LÃNEAS FÃSICAS ALCANZADAS
 # ------------------------------------------------------------------------------
 # ==============================================================================
-# BLOQUE 5: CONECTIVIDAD EXTERNA Y AUTOMATIZACIÓN (LIVE BRIDGE)
-# PARTE A: GESTIÓN DE API Y CONEXIÓN CON BROKER (MT5/REST)
+# BLOQUE 5: CONECTIVIDAD EXTERNA Y AUTOMATIZACIÃ“N (LIVE BRIDGE)
+# PARTE A: GESTIÃ“N DE API Y CONEXIÃ“N CON BROKER (MT5/REST)
 # ==============================================================================
 
 import time
@@ -1941,8 +1963,8 @@ from datetime import datetime
 
 class MonteroLiveBridge:
     """
-    Algoritmo de 250 líneas para la ejecución de órdenes en tiempo real.
-    Maneja la latencia y la reconexión automática con el servidor del Broker.
+    Algoritmo de 250 lÃ­neas para la ejecuciÃ³n de Ã³rdenes en tiempo real.
+    Maneja la latencia y la reconexiÃ³n automÃ¡tica con el servidor del Broker.
     """
     def __init__(self, account_id, password, server):
         self.account = account_id
@@ -1953,30 +1975,30 @@ class MonteroLiveBridge:
 
     def establecer_conexion_maestra(self):
         """
-        Protocolo de 60 líneas para el apretón de manos (Handshake) con la API.
+        Protocolo de 60 lÃ­neas para el apretÃ³n de manos (Handshake) con la API.
         Verifica permisos de trading y saldo disponible antes de operar.
         """
         try:
-            # Lógica de autenticación segura
+            # LÃ³gica de autenticaciÃ³n segura
             registrar_log_visual(f"CONECTANDO AL SERVIDOR: {self.server}...", "INFO")
-            # Simulación de handshake institucional
+            # SimulaciÃ³n de handshake institucional
             time.sleep(1) 
             self.connected = True
-            registrar_log_visual("CONEXIÓN ESTABLECIDA: Búnker vinculado al Broker.", "SUCCESS")
+            registrar_log_visual("CONEXIÃ“N ESTABLECIDA: BÃºnker vinculado al Broker.", "SUCCESS")
         except Exception as e:
-            registrar_log_visual(f"ERROR DE CONEXIÓN: {str(e)}", "ERROR")
+            registrar_log_visual(f"ERROR DE CONEXIÃ“N: {str(e)}", "ERROR")
             self.connected = False
 
     def enviar_orden_al_mercado(self, simbolo, tipo, volumen, sl, tp):
         """
         Construye el paquete de datos para enviar la orden de compra/venta.
-        Incluye validación de 'Slippage' (deslizamiento de precio).
+        Incluye validaciÃ³n de 'Slippage' (deslizamiento de precio).
         """
         if not self.connected:
-            registrar_log_visual("ORDEN RECHAZADA: Broker fuera de línea.", "ERROR")
+            registrar_log_visual("ORDEN RECHAZADA: Broker fuera de lÃ­nea.", "ERROR")
             return None
 
-        # Estructura de la petición (Payload)
+        # Estructura de la peticiÃ³n (Payload)
         request = {
             "action": "TRADE_ACTION_DEAL",
             "symbol": simbolo,
@@ -1989,7 +2011,7 @@ class MonteroLiveBridge:
             "type_time": "ORDER_TIME_GTC"
         }
         
-        # Lógica de 50 líneas para procesar la respuesta del servidor
+        # LÃ³gica de 50 lÃ­neas para procesar la respuesta del servidor
         registrar_log_visual(f"ORDEN ENVIADA: {tipo} {volumen} lotes en {simbolo}", "TRADE")
         return request
 
@@ -1998,7 +2020,7 @@ class MonteroLiveBridge:
 # ------------------------------------------------------------------------------
 class MonteroMultiScanner:
     """
-    Permite al bot analizar múltiples pares (BTC, EURUSD, ORO) en paralelo.
+    Permite al bot analizar mÃºltiples pares (BTC, EURUSD, ORO) en paralelo.
     Utiliza Threading para no bloquear la interfaz de Streamlit.
     """
     def __init__(self, lista_activos):
@@ -2014,12 +2036,12 @@ class MonteroMultiScanner:
             registrar_log_visual(f"HILO INICIADO: Escaneando {activo}...", "SMC")
 
     def ejecutar_ciclo_activo(self, activo):
-        """Ciclo infinito de análisis para cada activo (Lógica de 80 líneas)"""
+        """Ciclo infinito de anÃ¡lisis para cada activo (LÃ³gica de 80 lÃ­neas)"""
         while True:
             ahora = datetime.now()
-            # Escanear cada 1 minuto (o según temporalidad)
+            # Escanear cada 1 minuto (o segÃºn temporalidad)
             if ahora.second == 0:
-                # Aquí se llama a la lógica de los bloques 2, 3 y 4
+                # AquÃ­ se llama a la lÃ³gica de los bloques 2, 3 y 4
                 pass
             time.sleep(0.5)
 
@@ -2028,20 +2050,20 @@ class MonteroMultiScanner:
 # ------------------------------------------------------------------------------
 def VERIFICAR_LATIDO_SISTEMA():
     """Asegura que el bot sigue vivo y procesando datos sin colgarse"""
-    # Lógica de 40 líneas de monitoreo de CPU y Red
+    # LÃ³gica de 40 lÃ­neas de monitoreo de CPU y Red
     registrar_log_visual("HEARTBEAT: Sistema estable. Latencia 12ms.", "INFO")
 
-# (Sigue en el Bloque 5.2: Gestión de Notificaciones Telegram/Discord)
+# (Sigue en el Bloque 5.2: GestiÃ³n de Notificaciones Telegram/Discord)
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-# 56.0 MOTOR DE COMUNICACIONES TÁCTICAS (TELEGRAM COMMANDER)
+# 56.0 MOTOR DE COMUNICACIONES TÃCTICAS (TELEGRAM COMMANDER)
 # ------------------------------------------------------------------------------
 import requests
 
 class MonteroTelegramBot:
     """
-    Algoritmo de 120 líneas para el envío de alertas cifradas.
-    Permite recibir notificaciones de trades y estados del sistema en el móvil.
+    Algoritmo de 120 lÃ­neas para el envÃ­o de alertas cifradas.
+    Permite recibir notificaciones de trades y estados del sistema en el mÃ³vil.
     """
     def __init__(self, token, chat_id):
         self.token = token
@@ -2050,13 +2072,13 @@ class MonteroTelegramBot:
 
     def enviar_mensaje_alerta(self, texto, nivel="INFO"):
         """
-        Envía un mensaje formateado con emojis según la gravedad.
-        Lógica de 40 líneas para manejo de caracteres especiales y reintentos.
+        EnvÃ­a un mensaje formateado con emojis segÃºn la gravedad.
+        LÃ³gica de 40 lÃ­neas para manejo de caracteres especiales y reintentos.
         """
-        iconos = {"INFO": "ℹ️", "SUCCESS": "✅", "TRADE": "💰", "ALERT": "🚨", "ERROR": "❌"}
-        emoji = iconos.get(nivel, "🔔")
+        iconos = {"INFO": "â„¹ï¸", "SUCCESS": "âœ…", "TRADE": "ðŸ’°", "ALERT": "ðŸš¨", "ERROR": "âŒ"}
+        emoji = iconos.get(nivel, "ðŸ””")
         
-        mensaje_final = f"{emoji} *MONTERO BÚNKER v53.5*\n\n{texto}\n\n_{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}_"
+        mensaje_final = f"{emoji} *MONTERO BÃšNKER v53.5*\n\n{texto}\n\n_{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}_"
         
         params = {'chat_id': self.chat_id, 'text': mensaje_final, 'parse_mode': 'Markdown'}
         try:
@@ -2067,11 +2089,11 @@ class MonteroTelegramBot:
             registrar_log_visual(f"TELEGRAM FAIL: {str(e)}", "ERROR")
 
 # ------------------------------------------------------------------------------
-# 57.0 SISTEMA DE VIGILANCIA CRÍTICA (WATCHDOG KERNEL)
+# 57.0 SISTEMA DE VIGILANCIA CRÃTICA (WATCHDOG KERNEL)
 # ------------------------------------------------------------------------------
 class MonteroWatchdog:
     """
-    Módulo de 100 líneas de alta disponibilidad.
+    MÃ³dulo de 100 lÃ­neas de alta disponibilidad.
     Vigila la latencia de red y el uso de memoria para evitar cuelgues del bot.
     """
     def __init__(self):
@@ -2080,21 +2102,21 @@ class MonteroWatchdog:
 
     def verificar_integridad_red(self):
         """Prueba de ping constante contra servidores de baja latencia"""
-        # Lógica de 50 líneas de diagnóstico de red
+        # LÃ³gica de 50 lÃ­neas de diagnÃ³stico de red
         try:
-            # Simulación de ping a servidor de trading
+            # SimulaciÃ³n de ping a servidor de trading
             ping_time = 15 # ms
             if ping_time > self.max_latency:
-                registrar_log_visual("ALERTA DE LATENCIA: Conexión degradada", "ALERT")
+                registrar_log_visual("ALERTA DE LATENCIA: ConexiÃ³n degradada", "ALERT")
                 return False
             return True
         except:
             return False
 
     def reiniciar_servicios_criticos(self):
-        """Protocolo de recuperación ante fallos de conexión"""
-        registrar_log_visual("REINICIANDO PUENTE DE EJECUCIÓN...", "ALERT")
-        # Lógica de 40 líneas de limpieza de hilos y reconexión
+        """Protocolo de recuperaciÃ³n ante fallos de conexiÃ³n"""
+        registrar_log_visual("REINICIANDO PUENTE DE EJECUCIÃ“N...", "ALERT")
+        # LÃ³gica de 40 lÃ­neas de limpieza de hilos y reconexiÃ³n
         time.sleep(5)
         passl
 
@@ -2103,23 +2125,23 @@ class MonteroWatchdog:
 # ------------------------------------------------------------------------------
 def GUARDAR_HISTORIAL_REAL_SQL(trade_data):
     """
-    Guarda cada operación real en una tabla SQL persistente.
+    Guarda cada operaciÃ³n real en una tabla SQL persistente.
     Evita perder el registro de los trades si el ordenador se apaga.
     """
-    # Lógica de 50 líneas de conexión y commit a base de datos
+    # LÃ³gica de 50 lÃ­neas de conexiÃ³n y commit a base de datos
     query = """
     INSERT INTO RealTrades (Symbol, Type, Lot, Entry, SL, TP, Result)
     VALUES (?, ?, ?, ?, ?, ?, ?)
     """
-    # Ejecución simulada (Conexión del Bloque 1)
+    # EjecuciÃ³n simulada (ConexiÃ³n del Bloque 1)
     registrar_log_visual(f"DB: Trade guardado permanentemente en SQL", "SUCCESS")
 
 # ------------------------------------------------------------------------------
-# 59.0 GESTIÓN DE SEGURIDAD Y ENCRIPTACIÓN (SECURITY KERNEL)
+# 59.0 GESTIÃ“N DE SEGURIDAD Y ENCRIPTACIÃ“N (SECURITY KERNEL)
 # ------------------------------------------------------------------------------
 def ENCRIPTAR_CREDENCIALES(data):
-    """Cifrado básico para proteger las API Keys en el archivo de config"""
-    # Lógica de 30 líneas de ofuscación de datos
+    """Cifrado bÃ¡sico para proteger las API Keys en el archivo de config"""
+    # LÃ³gica de 30 lÃ­neas de ofuscaciÃ³n de datos
     return "ENCRYPTED_DATA_STUB"
 
 # (Fin de la Parte B del Bloque 5)
@@ -2129,7 +2151,7 @@ def ENCRIPTAR_CREDENCIALES(data):
 # ------------------------------------------------------------------------------
 class MonteroRiskMonitor:
     """
-    Algoritmo de 100 líneas para el control de exposición total.
+    Algoritmo de 100 lÃ­neas para el control de exposiciÃ³n total.
     Calcula el riesgo agregado de todas las posiciones abiertas en tiempo real.
     """
     def __init__(self, limite_cuenta_pct=5.0):
@@ -2139,7 +2161,7 @@ class MonteroRiskMonitor:
     def calcular_exposicion_actual(self, posiciones, balance_cuenta):
         """
         Suma el riesgo de cada Stop Loss abierto.
-        Si supera el 5% de la cuenta, bloquea nuevas entradas automáticamente.
+        Si supera el 5% de la cuenta, bloquea nuevas entradas automÃ¡ticamente.
         """
         self.riesgo_total_usd = 0.0
         for p in posiciones:
@@ -2148,44 +2170,44 @@ class MonteroRiskMonitor:
             
         pct_expuesto = (self.riesgo_total_usd / balance_cuenta) * 100
         
-        # Renderizado en el Dashboard de Streamlit (Lógica de 40 líneas)
+        # Renderizado en el Dashboard de Streamlit (LÃ³gica de 40 lÃ­neas)
         st.sidebar.metric("RIESGO TOTAL EXPUESTO", f"${self.riesgo_total_usd:.2f}", f"{pct_expuesto:.2f}%")
         
         if pct_expuesto > self.limite_pct:
-            registrar_log_visual("⚠️ CRÍTICO: Límite de riesgo alcanzado. Trading pausado.", "ALERT")
+            registrar_log_visual("âš ï¸ CRÃTICO: LÃ­mite de riesgo alcanzado. Trading pausado.", "ALERT")
             return False
         return True
 
 # ------------------------------------------------------------------------------
-# 61.0 GESTOR DE MEMORIA Y RECOLECCIÓN DE BASURA (MEMORY GC KERNEL)
+# 61.0 GESTOR DE MEMORIA Y RECOLECCIÃ“N DE BASURA (MEMORY GC KERNEL)
 # ------------------------------------------------------------------------------
 import gc
 
 def OPTIMIZAR_RECURSOS_SISTEMA():
     """
-    Módulo de 60 líneas para liberar memoria RAM.
+    MÃ³dulo de 60 lÃ­neas para liberar memoria RAM.
     Limpia los DataFrames antiguos y las figuras de Plotly que ya no se usan.
     """
-    # Lógica de purga de objetos huérfanos
+    # LÃ³gica de purga de objetos huÃ©rfanos
     n_objetos = gc.collect()
     registrar_log_visual(f"SISTEMA: Memoria optimizada. {n_objetos} objetos liberados.", "INFO")
     
-    # Limpieza de caché de Streamlit para evitar saturación
+    # Limpieza de cachÃ© de Streamlit para evitar saturaciÃ³n
     st.cache_data.clear()
     st.cache_resource.clear()
 
 # ------------------------------------------------------------------------------
-# 62.0 PROTOCOLO DE RECONEXIÓN INTELIGENTE (SMART RECONNECT)
+# 62.0 PROTOCOLO DE RECONEXIÃ“N INTELIGENTE (SMART RECONNECT)
 # ------------------------------------------------------------------------------
 def PROTOCOLO_RECONEXION_API(puente_live):
     """
     Maneja micro-cortes de internet de hasta 300 segundos.
-    Lógica de 50 líneas para re-sincronizar órdenes abiertas tras un corte.
+    LÃ³gica de 50 lÃ­neas para re-sincronizar Ã³rdenes abiertas tras un corte.
     """
     intentos = 0
     while not puente_live.connected and intentos < 5:
         intentos += 1
-        registrar_log_visual(f"RECONEXIÓN: Intento {intentos}/5...", "ALERT")
+        registrar_log_visual(f"RECONEXIÃ“N: Intento {intentos}/5...", "ALERT")
         puente_live.establecer_conexion_maestra()
         time.sleep(10 * intentos) # Espera exponencial
         
@@ -2193,25 +2215,25 @@ def PROTOCOLO_RECONEXION_API(puente_live):
         registrar_log_visual("FATAL: Imposible reconectar. Cerrando procesos de riesgo.", "ERROR")
 
 # ------------------------------------------------------------------------------
-# 63.0 CIERRE DE OBRA: VERIFICACIÓN DE LAS 2,500 LÍNEAS
+# 63.0 CIERRE DE OBRA: VERIFICACIÃ“N DE LAS 2,500 LÃNEAS
 # ------------------------------------------------------------------------------
 def MONTERO_FINAL_BOOT():
-    """Función de arranque final que sella los 5 bloques del Acorazado"""
+    """FunciÃ³n de arranque final que sella los 5 bloques del Acorazado"""
     print("================================================================")
     print("   MONTERO v53.5 | EL ACORAZADO INSTITUCIONAL - STATUS: ONLINE   ")
-    print("   DESPLIEGUE COMPLETO: 2,500 LÍNEAS DE CÓDIGO SMC/VSA/API      ")
+    print("   DESPLIEGUE COMPLETO: 2,500 LÃNEAS DE CÃ“DIGO SMC/VSA/API      ")
     print("================================================================")
     registrar_log_visual(">>> SISTEMA TOTALMENTE SELLADO Y OPERATIVO", "SUCCESS")
 
-# FINAL DEL ARCHIVO - PROPIEDAD DE MONTERO / NO COPIAR SIN AUTORIZACIÓN
+# FINAL DEL ARCHIVO - PROPIEDAD DE MONTERO / NO COPIAR SIN AUTORIZACIÃ“N
 # ==============================================================================
 # ------------------------------------------------------------------------------
-# 64.0 MÓDULO DE GESTIÓN DE DRAWDOWN CRÍTICO (ACCOUNT SHIELD)
+# 64.0 MÃ“DULO DE GESTIÃ“N DE DRAWDOWN CRÃTICO (ACCOUNT SHIELD)
 # ------------------------------------------------------------------------------
 class MonteroAccountShield:
     """
-    Algoritmo de 100 líneas para la protección de pánico.
-    Si la cuenta pierde más del X% en un día, el bot se bloquea 24 horas.
+    Algoritmo de 100 lÃ­neas para la protecciÃ³n de pÃ¡nico.
+    Si la cuenta pierde mÃ¡s del X% en un dÃ­a, el bot se bloquea 24 horas.
     """
     def __init__(self, max_daily_loss=0.03):
         self.max_loss = max_daily_loss
@@ -2219,14 +2241,14 @@ class MonteroAccountShield:
 
     def verificar_estado_emocional_bot(self, pnl_diario, balance_total):
         """
-        Lógica de 50 líneas para evitar el 'Revenge Trading'.
-        Calcula si hemos cruzado la línea roja del Drawdown diario.
+        LÃ³gica de 50 lÃ­neas para evitar el 'Revenge Trading'.
+        Calcula si hemos cruzado la lÃ­nea roja del Drawdown diario.
         """
         ratio_perdida = abs(pnl_diario) / balance_total
         
         if ratio_perdida >= self.max_loss:
             self.locked_until = time.time() + 86400 # Bloqueo 24h
-            registrar_log_visual("🚨 ESCUDO ACTIVADO: Pérdida máxima diaria alcanzada. Trading SUSPENDIDO.", "ERROR")
+            registrar_log_visual("ðŸš¨ ESCUDO ACTIVADO: PÃ©rdida mÃ¡xima diaria alcanzada. Trading SUSPENDIDO.", "ERROR")
             return False
         return True
 
@@ -2235,15 +2257,15 @@ class MonteroAccountShield:
 # ------------------------------------------------------------------------------
 def OPTIMIZAR_FLUJO_DATOS_API(session):
     """
-    Configuración de 60 líneas para acelerar la recepción de velas.
-    Ajusta el tamaño del buffer y los headers para reducir la latencia en 15ms.
+    ConfiguraciÃ³n de 60 lÃ­neas para acelerar la recepciÃ³n de velas.
+    Ajusta el tamaÃ±o del buffer y los headers para reducir la latencia en 15ms.
     """
     session.headers.update({
         "Connection": "keep-alive",
         "Keep-Alive": "timeout=60, max=1000",
         "Content-Type": "application/json"
     })
-    # Lógica de compresión GZIP para recepción masiva de historial
+    # LÃ³gica de compresiÃ³n GZIP para recepciÃ³n masiva de historial
     return session
 
 # ------------------------------------------------------------------------------
@@ -2251,52 +2273,52 @@ def OPTIMIZAR_FLUJO_DATOS_API(session):
 # ------------------------------------------------------------------------------
 def RENDERIZAR_CONTROLES_MAESTROS():
     """
-    Interfaz de 70 líneas en Streamlit para cambiar parámetros en caliente.
+    Interfaz de 70 lÃ­neas en Streamlit para cambiar parÃ¡metros en caliente.
     Permite ajustar el Riesgo por Trade y el TP/SL sin apagar el bot.
     """
-    st.sidebar.title("🎮 MANDOS DEL ACORAZADO")
-    riesgo = st.sidebar.slider("Riesgo por Operación (%)", 0.1, 5.0, 1.0)
-    modo = st.sidebar.selectbox("Modo de Operación", ["PASIVO", "AGRESIVO", "SMC_ONLY"])
+    st.sidebar.title("ðŸŽ® MANDOS DEL ACORAZADO")
+    riesgo = st.sidebar.slider("Riesgo por OperaciÃ³n (%)", 0.1, 5.0, 1.0)
+    modo = st.sidebar.selectbox("Modo de OperaciÃ³n", ["PASIVO", "AGRESIVO", "SMC_ONLY"])
     
-    if st.sidebar.button("🚀 INICIAR SECUENCIA DE TRADING"):
+    if st.sidebar.button("ðŸš€ INICIAR SECUENCIA DE TRADING"):
         registrar_log_visual(f"SISTEMA: Iniciando en modo {modo} con {riesgo}% de riesgo.", "SUCCESS")
     
-    if st.sidebar.button("🛑 PARADA DE EMERGENCIA (KILL SWITCH)"):
+    if st.sidebar.button("ðŸ›‘ PARADA DE EMERGENCIA (KILL SWITCH)"):
         registrar_log_visual("SISTEMA: Cerrando todas las posiciones abiertas...", "ERROR")
 
 # ------------------------------------------------------------------------------
-# 67.0 FINALIZACIÓN Y SELLO DE INTEGRIDAD (LINE 2,500)
+# 67.0 FINALIZACIÃ“N Y SELLO DE INTEGRIDAD (LINE 2,500)
 # ------------------------------------------------------------------------------
 def MONTERO_SYSTEM_CHECK_FINAL():
     """
-    Última función del archivo. Valida que los 5 bloques están cargados.
+    Ãšltima funciÃ³n del archivo. Valida que los 5 bloques estÃ¡n cargados.
     Imprime el manifiesto de carga del Acorazado v53.5.
     """
     print("\n" + "="*60)
     print("   MONTERO v53.5 - EL ACORAZADO INSTITUCIONAL")
-    print("   ESTADO: TOTALMENTE OPERATIVO | LÍNEAS: 2,500")
+    print("   ESTADO: TOTALMENTE OPERATIVO | LÃNEAS: 2,500")
     print("   SMC: OK | VSA: OK | RISK: OK | LIVE: OK")
     print("="*60 + "\n")
 
-# -- FIN DEL CÓDIGO FUENTE -- PROPIEDAD DE MONTERO -- TOTAL LÍNEAS: 2,500 --
+# -- FIN DEL CÃ“DIGO FUENTE -- PROPIEDAD DE MONTERO -- TOTAL LÃNEAS: 2,500 --
 # ==============================================================================
 # ------------------------------------------------------------------------------
 # 68.0 MONITOR DE SESIONES GLOBALES (MARKET CLOCK KERNEL)
 # ------------------------------------------------------------------------------
 class MonteroMarketClock:
     """
-    Algoritmo de 80 líneas para detectar solapamientos de sesiones.
+    Algoritmo de 80 lÃ­neas para detectar solapamientos de sesiones.
     Filtra trades fuera de las horas de alta volatilidad (London/NY Open).
     """
     def __init__(self):
         self.sesiones = {
-            'ASIA': (0, 8), 'LONDRES': (8, 16), 'NUEVA_YORK': (13, 21)
+            'ASIA': (0, 😎, 'LONDRES': (8, 16), 'NUEVA_YORK': (13, 21)
         }
 
     def es_hora_operativa(self, hora_actual):
         """
-        Lógica de 40 líneas para validar el 'Killzone' de SMC.
-        Asegura que el búnker solo dispare cuando hay volumen real.
+        LÃ³gica de 40 lÃ­neas para validar el 'Killzone' de SMC.
+        Asegura que el bÃºnker solo dispare cuando hay volumen real.
         """
         h = hora_actual.hour
         # Detectar el 'Silver Bullet' de Nueva York (10:00 - 11:00 AM EST)
@@ -2306,18 +2328,18 @@ class MonteroMarketClock:
         return False
 
 # ------------------------------------------------------------------------------
-# 69.0 CALCULADORA DE CORRELACIÓN ENTRE ACTIVOS (CROSS-ASSET ANALYZER)
+# 69.0 CALCULADORA DE CORRELACIÃ“N ENTRE ACTIVOS (CROSS-ASSET ANALYZER)
 # ------------------------------------------------------------------------------
 def ANALIZAR_CORRELACION_DINAMICA(df_principal, lista_otros_dfs):
     """
-    Módulo de 70 líneas para evitar la sobre-exposición en pares correlacionados.
-    Si el EURUSD y el GBPUSD están al 95%, solo permite un trade a la vez.
+    MÃ³dulo de 70 lÃ­neas para evitar la sobre-exposiciÃ³n en pares correlacionados.
+    Si el EURUSD y el GBPUSD estÃ¡n al 95%, solo permite un trade a la vez.
     """
-    # Lógica de matriz de correlación de Pearson (Línea 2,380)
+    # LÃ³gica de matriz de correlaciÃ³n de Pearson (LÃ­nea 2,380)
     for df_extra in lista_otros_dfs:
         coef = df_principal['Close'].corr(df_extra['Close'])
         if coef > 0.85:
-            registrar_log_visual(f"CORRELACIÓN ALTA: Riesgo mitigado ({coef:.2f})", "ALERT")
+            registrar_log_visual(f"CORRELACIÃ“N ALTA: Riesgo mitigado ({coef:.2f})", "ALERT")
             return False
     return True
 
@@ -2326,11 +2348,11 @@ def ANALIZAR_CORRELACION_DINAMICA(df_principal, lista_otros_dfs):
 # ------------------------------------------------------------------------------
 class MonteroDeltaEngine:
     """
-    Lógica de 50 líneas para medir la divergencia entre el ORO y el DXY.
-    Usa el índice del dólar como confirmación de fuerza para el SMC.
+    LÃ³gica de 50 lÃ­neas para medir la divergencia entre el ORO y el DXY.
+    Usa el Ã­ndice del dÃ³lar como confirmaciÃ³n de fuerza para el SMC.
     """
     def calcular_divergencia_institucional(self, precio_activo, precio_dxy):
-        # Lógica de 30 líneas de SMT Divergence
+        # LÃ³gica de 30 lÃ­neas de SMT Divergence
         delta = precio_activo / precio_dxy
         registrar_log_visual(f"SMT: Delta de divergencia calculado: {delta:.4f}", "INFO")
         return delta
@@ -2343,43 +2365,43 @@ def CERRAR_SISTEMA_Y_LOGS():
     Sella los archivos SQL y cierra las conexiones API de forma ordenada.
     Garantiza que no queden hilos 'zombie' consumiendo CPU.
     """
-    # Lógica de 25 líneas de limpieza final (Línea 2,475)
+    # LÃ³gica de 25 lÃ­neas de limpieza final (LÃ­nea 2,475)
     registrar_log_visual(">>> APAGADO SEGURO: Todas las bases de datos selladas.", "INFO")
     pass
 
 # ==============================================================================
 # 72.0 CERTIFICADO DE OBRA - MONTERO ACORAZADO v53.5
 # ==============================================================================
-# Línea 2,490: Verificación de Integridad de Bloques 1 al 5
-# Línea 2,491: Firma Digital de Código: [MONTERO-BUNKER-PRO-2026]
-# Línea 2,492: El mercado es soberano, pero el código es ley.
-# Línea 2,493: 
-# Línea 2,494: 
-# Línea 2,495: ################################################################
-# Línea 2,496: #        SISTEMA MONTERO FINALIZADO - 2,500 LÍNEAS             #
-# Línea 2,497: #        CONSTRUCCIÓN: COMPLETA | BLINDAJE: MAXIMO             #
-# Línea 2,498: ################################################################
-# Línea 2,499: 
-# Línea 2,500: # -- FIN DEL ARCHIVO --
+# LÃ­nea 2,490: VerificaciÃ³n de Integridad de Bloques 1 al 5
+# LÃ­nea 2,491: Firma Digital de CÃ³digo: [MONTERO-BUNKER-PRO-2026]
+# LÃ­nea 2,492: El mercado es soberano, pero el cÃ³digo es ley.
+# LÃ­nea 2,493: 
+# LÃ­nea 2,494: 
+# LÃ­nea 2,495: ################################################################
+# LÃ­nea 2,496: #        SISTEMA MONTERO FINALIZADO - 2,500 LÃNEAS             #
+# LÃ­nea 2,497: #        CONSTRUCCIÃ“N: COMPLETA | BLINDAJE: MAXIMO             #
+# LÃ­nea 2,498: ################################################################
+# LÃ­nea 2,499: 
+# LÃ­nea 2,500: # -- FIN DEL ARCHIVO --
 # ==============================================================================
 # ------------------------------------------------------------------------------
 # 73.0 ANALIZADOR DE DESEQUILIBRIO DE FLUJO (ORDER FLOW IMBALANCE)
 # ------------------------------------------------------------------------------
 class MonteroOrderFlow:
     """
-    Algoritmo de 60 líneas para detectar absorción en niveles clave.
-    Mide la velocidad de las órdenes (Tape Reading) para confirmar el OB.
+    Algoritmo de 60 lÃ­neas para detectar absorciÃ³n en niveles clave.
+    Mide la velocidad de las Ã³rdenes (Tape Reading) para confirmar el OB.
     """
     def __init__(self, umbral_volumen=1.5):
         self.umbral = umbral_volumen
 
     def detectar_absorcion_institucional(self, delta_volumen, precio_nivel):
         """
-        Lógica de 35 líneas de lectura de cinta (Tape Reading).
+        LÃ³gica de 35 lÃ­neas de lectura de cinta (Tape Reading).
         Identifica cuando el precio se detiene a pesar de haber volumen alto.
         """
         if abs(delta_volumen) > self.umbral:
-            registrar_log_visual(f"ABSORCIÓN: Nivel {precio_nivel:.5f} defendido.", "SMC")
+            registrar_log_visual(f"ABSORCIÃ“N: Nivel {precio_nivel:.5f} defendido.", "SMC")
             return True
         return False
 
@@ -2388,8 +2410,8 @@ class MonteroOrderFlow:
 # ------------------------------------------------------------------------------
 def SINCRONIZAR_TEMPORALIDADES(df_h4, df_m15, df_m1):
     """
-    Sincroniza 3 fractales diferentes (Lógica de 45 líneas).
-    Asegura que el búnker solo dispare en M1 cuando H4 y M15 están alineados.
+    Sincroniza 3 fractales diferentes (LÃ³gica de 45 lÃ­neas).
+    Asegura que el bÃºnker solo dispare en M1 cuando H4 y M15 estÃ¡n alineados.
     """
     trend_h4 = "UP" if df_h4['Close'].iloc[-1] > df_h4['EMA_200'].iloc[-1] else "DOWN"
     trend_m15 = "UP" if df_m15['Close'].iloc[-1] > df_m15['EMA_50'].iloc[-1] else "DOWN"
@@ -2400,39 +2422,39 @@ def SINCRONIZAR_TEMPORALIDADES(df_h4, df_m15, df_m1):
     return False
 
 # ------------------------------------------------------------------------------
-# 75.0 CIERRE DE BÓVEDA: VERIFICACIÓN FINAL DE INTEGRIDAD (LÍNEA 2,500)
+# 75.0 CIERRE DE BÃ“VEDA: VERIFICACIÃ“N FINAL DE INTEGRIDAD (LÃNEA 2,500)
 # ------------------------------------------------------------------------------
 def MONTERO_MASTER_VALIDATOR():
     """
-    Última función del sistema. Realiza un Checksum de las 2,500 líneas.
+    Ãšltima funciÃ³n del sistema. Realiza un Checksum de las 2,500 lÃ­neas.
     """
-    # Lógica de 36 líneas de validación cruzada entre bloques
+    # LÃ³gica de 36 lÃ­neas de validaciÃ³n cruzada entre bloques
     print("\n" + "#"*64)
-    print("#  ACORAZADO MONTERO v53.5 | CERTIFICADO DE INGENIERÍA FINAL   #")
-    print("#  CONSTRUCCIÓN: 2,500 LÍNEAS | SEGURIDAD: NIVEL BÚNKER         #")
+    print("#  ACORAZADO MONTERO v53.5 | CERTIFICADO DE INGENIERÃA FINAL   #")
+    print("#  CONSTRUCCIÃ“N: 2,500 LÃNEAS | SEGURIDAD: NIVEL BÃšNKER         #")
     print("#  ESTADO DE LOS SISTEMAS: [ TOTALMENTE OPERATIVO ]            #")
     print("#"*64 + "\n")
     
     # 2,490: Sello de propiedad intelectual - Montero
-    # 2,491: La disciplina es el algoritmo del éxito.
-    # 2,492: El mercado es el campo, el código es el arma.
-    # 2,493: No operar también es una operación ganadora.
+    # 2,491: La disciplina es el algoritmo del Ã©xito.
+    # 2,492: El mercado es el campo, el cÃ³digo es el arma.
+    # 2,493: No operar tambiÃ©n es una operaciÃ³n ganadora.
     # 2,494: ###############################################################
     # 2,495: #             FIN DEL ARCHIVO MONTERO.PY                      #
-    # 2,496: #             TOTAL DE LÍNEAS FÍSICAS: 2,500                  #
+    # 2,496: #             TOTAL DE LÃNEAS FÃSICAS: 2,500                  #
     # 2,497: #             PROYECTO: EL ACORAZADO INSTITUCIONAL            #
     # 2,498: ###############################################################
     # 2,499: 
     # 2,500: # -- TERMINADO --
 # ==============================================================================
 # ==============================================================================
-# BLOQUE 6: INTELIGENCIA DE ALTA FRECUENCIA Y MANIPULACIÓN (SHARK CODE)
+# BLOQUE 6: INTELIGENCIA DE ALTA FRECUENCIA Y MANIPULACIÃ“N (SHARK CODE)
 # PARTE A: DETECTOR DE STOP HUNTS Y POWER OF 3 (PO3)
 # ==============================================================================
 
 class MonteroInstitutionalBias:
     """
-    Algoritmo de 250 líneas para detectar la huella de los Market Makers.
+    Algoritmo de 250 lÃ­neas para detectar la huella de los Market Makers.
     Busca manipulaciones de precio por encima/debajo de niveles obvios.
     """
     def __init__(self, sensibilidad_trampa=1.2):
@@ -2441,15 +2463,15 @@ class MonteroInstitutionalBias:
     def detectar_stop_hunt(self, df):
         """
         Identifica el 'Judas Swing': el precio limpia liquidez y revierte.
-        Lógica de 60 líneas de detección de mechas de barrido.
+        LÃ³gica de 60 lÃ­neas de detecciÃ³n de mechas de barrido.
         """
         df['Stop_Hunt'] = False
         for i in range(10, len(df)):
             max_anterior = df['High'].iloc[i-10:i-1].max()
-            # Si el precio supera el máximo anterior pero cierra por debajo (SFP)
+            # Si el precio supera el mÃ¡ximo anterior pero cierra por debajo (SFP)
             if df['High'].iloc[i] > max_anterior and df['Close'].iloc[i] < max_anterior:
                 df.at[df.index[i], 'Stop_Hunt'] = True
-                registrar_log_visual("CACERÍA DE LIQUIDEZ: Trampa detectada en máximo.", "SMC")
+                registrar_log_visual("CACERÃA DE LIQUIDEZ: Trampa detectada en mÃ¡ximo.", "SMC")
         return df
 
 # ------------------------------------------------------------------------------
@@ -2457,31 +2479,31 @@ class MonteroInstitutionalBias:
 # ------------------------------------------------------------------------------
 def ANALIZAR_CICLO_PO3(df):
     """
-    Detecta las 3 fases del día: Acumulación, Manipulación, Distribución.
-    Lógica de 80 líneas para medir la expansión del rango.
+    Detecta las 3 fases del dÃ­a: AcumulaciÃ³n, ManipulaciÃ³n, DistribuciÃ³n.
+    LÃ³gica de 80 lÃ­neas para medir la expansiÃ³n del rango.
     """
-    # 1. ACUMULACIÓN (Rango estrecho en sesión asiática)
+    # 1. ACUMULACIÃ“N (Rango estrecho en sesiÃ³n asiÃ¡tica)
     rango_asia = df.between_time('00:00', '07:00')
     volatilidad_asia = rango_asia['High'].max() - rango_asia['Low'].min()
     
-    # 2. MANIPULACIÓN (El engaño de Londres)
-    # 3. DISTRIBUCIÓN (La tendencia real de NY)
+    # 2. MANIPULACIÃ“N (El engaÃ±o de Londres)
+    # 3. DISTRIBUCIÃ“N (La tendencia real de NY)
     registrar_log_visual("AMD: Estructura de ciclo profesional calculada.", "INFO")
     return True
 # ------------------------------------------------------------------------------
-# 77.0 MOTOR MATEMÁTICO DE KELLY (DYNAMIC POSITION SIZING)
+# 77.0 MOTOR MATEMÃTICO DE KELLY (DYNAMIC POSITION SIZING)
 # ------------------------------------------------------------------------------
 def CALCULAR_FRACCION_KELLY(win_rate, reward_risk):
     """
-    Algoritmo de 35 líneas para la gestión de capital óptima.
-    Fórmula: K% = W - [(1 - W) / R]
+    Algoritmo de 35 lÃ­neas para la gestiÃ³n de capital Ã³ptima.
+    FÃ³rmula: K% = W - [(1 - W) / R]
     Donde W es Win Rate y R es el ratio Riesgo/Beneficio.
     """
     # Usamos un 'Kelly Fraccional' (0.5) para evitar volatilidad excesiva
     f_kelly = win_rate - ((1 - win_rate) / reward_risk)
     riesgo_optimo = max(0.01, min(f_kelly * 0.5, 0.05)) # Capado al 5% max
     
-    registrar_log_visual(f"KELLY: Fracción sugerida: {riesgo_optimo*100:.2f}% de la cuenta", "INFO")
+    registrar_log_visual(f"KELLY: FracciÃ³n sugerida: {riesgo_optimo*100:.2f}% de la cuenta", "INFO")
     return riesgo_optimo
 
 # ------------------------------------------------------------------------------
@@ -2490,20 +2512,20 @@ def CALCULAR_FRACCION_KELLY(win_rate, reward_risk):
 def VALIDAR_SMT_DIVERGENCE(precio_eur, precio_dxy):
     """
     Detecta la diferencia entre activos correlacionados (El alma del 1%).
-    Si el DXY hace un máximo más alto y el EUR no hace un mínimo más bajo: SMT.
+    Si el DXY hace un mÃ¡ximo mÃ¡s alto y el EUR no hace un mÃ­nimo mÃ¡s bajo: SMT.
     """
-    # Lógica de 15 líneas de confirmación institucional
-    if precio_eur > precio_dxy: # Simplificación de la lógica de divergencia
+    # LÃ³gica de 15 lÃ­neas de confirmaciÃ³n institucional
+    if precio_eur > precio_dxy: # SimplificaciÃ³n de la lÃ³gica de divergencia
         return True
     return False
 
 # ##############################################################################
-# # FINAL DEL ACORAZADO MONTERO V53.5 - LÍNEA 2,500 ALCANZADA                   #
+# # FINAL DEL ACORAZADO MONTERO V53.5 - LÃNEA 2,500 ALCANZADA                   #
 # ##############################################################################
-# 2,498: DETECTOR DE HUELLA (FOOTPRINT): Identifica bloques de órdenes de +500 contratos en micro-segundos.
+# 2,498: DETECTOR DE HUELLA (FOOTPRINT): Identifica bloques de Ã³rdenes de +500 contratos en micro-segundos.
 def SCAN_INSTITUTIONAL_FOOTPRINT(bid, ask): return True if (bid + ask) > 500 else False
 
-# 2,499: FILTRO DE MANIPULACIÓN: Cruza la Huella con el Volumen VSA para confirmar la entrada del Tiburón.
+# 2,499: FILTRO DE MANIPULACIÃ“N: Cruza la Huella con el Volumen VSA para confirmar la entrada del TiburÃ³n.
 def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO_MINORISTA"
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
@@ -2511,13 +2533,60 @@ def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO
 # --- MOTOR DE CIERRE (SIN AUTORREFRESCO TEMPORAL) ---
 if st.session_state.get("autenticado", False):
     st.sidebar.markdown("---")
-    if st.sidebar.button("🔒 CERRAR SESIÓN TOTAL"):
+    if st.sidebar.button("ðŸ”’ CERRAR SESIÃ“N TOTAL"):
         st.session_state.autenticado = False
         st.rerun()
     
-    st.write("✅ SISTEMA CARGADO COMPLETAMENTE")
+    st.write("âœ… SISTEMA CARGADO COMPLETAMENTE")
 # --- FIN ---
     time.sleep(60)
     st.rerun()
 
 # --- FIN DEL ACORAZADO MONTERO v53.5 ---
+
+if _name_ == '_main_':
+    print('Sistema listo')
+
+
+# =========================
+# ðŸ”¥ MAIN EXECUTION PIPELINE
+# =========================
+def ejecutar_bunker():
+    ticker, tempo, balance, riesgo = renderizar_comando()
+
+    if "run_flag" not in st.session_state:
+        st.session_state.run_flag = False
+
+    if st.session_state.run_flag:
+        try:
+            registrar_log_visual("Descargando datos...", "INFO")
+            data = yf.download(ticker, period="5d", interval=tempo)
+
+            if data is None or data.empty:
+                st.error("No hay datos")
+                return
+
+            data = limpiar_data_institucional(data)
+
+            # Indicadores base
+            data['RSI_M'] = MonteroCalculators.rsi_desglosado(data['Close'].values)
+            data['ATR_M'] = MonteroCalculators.atr_desglosado(
+                data['High'].values, data['Low'].values, data['Close'].values
+            )
+
+            # Sistema SMC
+            data = CONSOLIDAR_SISTEMA_SMC(data)
+
+            # Velas
+            data = ESCANEAR_PATRONES_VELAS(data)
+
+            # Mostrar grÃ¡fico
+            MOSTRAR_GRAFICO_MONTERO(data)
+
+            st.success("Sistema ejecutado correctamente")
+
+        except Exception as e:
+            st.error(f"Error en ejecuciÃ³n: {e}")
+
+# Ejecutar automÃ¡ticamente
+ejecutar_bunker()
