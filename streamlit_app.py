@@ -2536,6 +2536,16 @@ if __name__ == "__main__":
             # Esto mantiene el radar y las noticias moviéndose solos
             time.sleep(60)
             st.rerun()
-            
-        except Exception as e:
-            st.error(f"⚠️ Error en el Puente de Mando: {e}")
+          # --- AQUÍ ESTÁ TU LLAVE MAESTRA REAL ---
+        # Llamamos a la función que define todo tu menú y gráficos
+        try:
+            mostrar_interfaz_acorazado() 
+        except NameError:
+            st.error("⚠️ No se encontró la función 'mostrar_interfaz_acorazado'. Verifica el nombre en la línea 73.")
+
+        # 4. MOTOR DE AUTO-REFRESH (Cada 60 segundos)
+        time.sleep(60)
+        st.rerun()
+        
+    except Exception as e:
+        st.error(f"⚠️ Error al conectar con el Puente de Mando: {e}")
