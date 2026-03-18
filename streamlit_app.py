@@ -2528,7 +2528,7 @@ if __name__ == "__main__":
     else:
         # 3. INTERIOR DEL BÚNKER (SISTEMA COMPLETO)
       time.sleep(1)
-                st.rerun()
+      st.rerun()
             else:
                 st.error("❌ CLAVE INCORRECTA")
 
