@@ -853,8 +853,20 @@ def DETECTAR_LIQUIDEZ_EXPUESTA(df):
 # ------------------------------------------------------------------------------
 # 20.0 REFINAMIENTO DE SEÃ‘ALES DE ENTRADA (CONFIRMATION KERNEL)
 # ------------------------------------------------------------------------------
-    df['RSI_M'] = ta.rsi(df['Close'], length=14)
+   # --- GENERADOR DE SEÑALES SMC ---
+def GENERAR_SEÑAL_SMC(df):
+    try:
+        # 1. Limpieza de datos (Alineado con 8 espacios)
+        df = df.copy()
+        
+        # 2. Cálculo de Indicadores (Línea 855 y 856)
+        df['RSI_M'] = ta.rsi(df['Close'], length=14)
         df['ATR_M'] = ta.atr(df['High'], df['Low'], df['Close'], length=14)
+        
+        return df
+    except Exception as e:
+        st.error(f"Error en Generador: {e}")
+        return df
     Cruza Fractales + BOS + Order Blocks para dar el disparo final.
     LÃ³gica de 80 lÃ­neas de validaciÃ³n cruzada.
     """
