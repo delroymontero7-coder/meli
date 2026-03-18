@@ -853,8 +853,8 @@ def DETECTAR_LIQUIDEZ_EXPUESTA(df):
 # ------------------------------------------------------------------------------
 # 20.0 REFINAMIENTO DE SEÃ‘ALES DE ENTRADA (CONFIRMATION KERNEL)
 # ------------------------------------------------------------------------------
-    data['RSI_M'] = ta.rsi(data['Close'], length=14)
-    data['ATR_M'] = ta.atr(data['High'], data['Low'], data['Close'], length=14)
+    df['RSI_M'] = ta.rsi(df['Close'], length=14)
+        df['ATR_M'] = ta.atr(df['High'], df['Low'], df['Close'], length=14)
     Cruza Fractales + BOS + Order Blocks para dar el disparo final.
     LÃ³gica de 80 lÃ­neas de validaciÃ³n cruzada.
     """
