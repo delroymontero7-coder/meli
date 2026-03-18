@@ -2527,21 +2527,21 @@ if __name__ == "__main__":
                 st.error("❌ CLAVE INCORRECTA. El Acorazado permanece bloqueado.")
     else:
         # 3. INTERIOR DEL BÚNKER (SISTEMA COMPLETO)
+      time.sleep(1)
+                st.rerun()
+            else:
+                st.error("❌ CLAVE INCORRECTA")
+
+    else:
+        # 3. INTERIOR DEL BÚNKER (SISTEMA COMPLETO)
         try:
-            # Despertamos tu base de datos y la interfaz de la línea 73
+            # Aquí llamamos a la función de tu línea 73
             mostrar_interfaz_acorazado() 
             
-            # Un pequeño mensaje de confirmación en la barra lateral
-            st.sidebar.success("⚓ ACORAZADO OPERATIVO")
-            
-            # 4. MOTOR DE AUTO-REFRESH (60 SEGUNDOS)
+            # Refresco automático cada 60 segundos
+            import time
             time.sleep(60)
             st.rerun()
             
         except Exception as e:
-            st.error(f"⚠️ Error al conectar con el Puente de Mando: {e}")
-  
-        st.rerun()
-        
-    except Exception as e:
-        st.error(f"⚠️ Error al conectar con el Puente de Mando: {e}")
+            st.error(f"⚠️ Error en el Puente de Mando: {e}")
