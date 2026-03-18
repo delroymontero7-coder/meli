@@ -849,29 +849,31 @@ def DETECTAR_LIQUIDEZ_EXPUESTA(df):
             df.at[df.index[i], 'Liquidez_Suelo'] = df['Low'].iloc[i]
             
     return df
-
-# ------------------------------------------------------------------------------
-# 20.0 REFINAMIENTO DE SEÃ‘ALES DE ENTRADA (CONFIRMATION KERNEL)
-# ------------------------------------------------------------------------------
-   # --- GENERADOR DE SEÑALES SMC ---
-def GENERAR_SEÑAL_SMC(df):
+# LÍNEA 852: Definición de función
+def GENERAR_SENAL_SMC(df):
     try:
-        # 1. Limpieza de datos (Alineado con 8 espacios)
-        df = df.copy()
-        
-        # 2. Cálculo de Indicadores (Línea 855 y 856)
+        # LÍNEAS 855-856: Asignación corregida a 'df'
         df['RSI_M'] = ta.rsi(df['Close'], length=14)
         df['ATR_M'] = ta.atr(df['High'], df['Low'], df['Close'], length=14)
-        
+
+        # LÍNEA 860: Estado inicial
+        df['ACCION_MONTERO'] = "ESPERAR"
+
+        # ELIMINAR: Cualquier 'return df' entre la línea 860 y la 875
+
+        # LÍNEA 865: Inicio de iteración (Alineación: 4 espacios de sangría)
+        for i in range(1, len(df)):
+            # Tu lógica de condicionales 'if' debe ir aquí
+            # con 8 espacios de sangría.
+            pass 
+
+        # LÍNEA FINAL DE LA FUNCIÓN: Único punto de retorno
         return df
+
     except Exception as e:
-        st.error(f"Error en Generador: {e}")
+        print(f"Error: {e}")
         return df
-    Cruza Fractales + BOS + Order Blocks para dar el disparo final.
-    LÃ³gica de 80 lÃ­neas de validaciÃ³n cruzada.
-    """
-    df['ACCION_MONTERO'] = "ESPERAR"
-    
+
     for i in range(1, len(df)):
         # CONDICIÃ“N DE COMPRA: Tendencia Alcista + Retroceso a Bullish OB
         if df['Market_Trend'].iloc[i] == "BULLISH":
