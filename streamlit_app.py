@@ -18,25 +18,31 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- INICIO DE LA LLAVE MAESTRA ---
+# --- INICIO DE LA LLAVE MAESTRA (Ajustado) ---
 if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
 
 if not st.session_state.autenticado:
+    # 1. Pantalla de Entrada limpia y centrada
     st.markdown("<h1 style='text-align: center;'>⚓ ACORAZADO MONTERO</h1>", unsafe_allow_html=True)
-    password = st.text_input("PASSWORD DE MANDO:", type="password")
+    st.markdown("<p style='text-align: center; color: gray;'>Sistema de Mando Blindado | Inicie Sesión para Acceder</p>", unsafe_allow_html=True)
     
+    # 2. El Cuadro de Contraseña
+    password = st.text_input("PASSWORD DE MANDO (Quantum LEVEL):", type="password")
+    
+    # 3. El Botón de Activación
     if st.button("🔓 ACTIVAR SISTEMAS"):
         if password == "Quantum2026":
             st.session_state.autenticado = True
             st.success("✅ CLAVE MAESTRA ACEPTADA")
-            time.sleep(1)
-            st.rerun()
+            time.sleep(1) # Un segundo de margen
+            st.rerun() # Reinicia el script
         else:
-            st.error("❌ ACCESO DENEGADO")
-    st.stop() # <--- ESTO ES LO MÁS IMPORTANTE: Detiene todo si no hay clave.
-# --- FIN DE LA LLAVE MAESTRA ---
+            st.error("❌ CLAVE INCORRECTA | ACCESO DENEGADO")
 
+    # --- EL PORTERO (La Línea 37 corregida) ---
+    st.stop() # <--- IMPORTANTE: Está a la misma altura que el primer 'if not st.session_state'
+# --- FIN DE LA LLAVE MAESTRA (Ajustado) ---
 # De aquí para abajo, TODO tu código original se ejecutará solo 
 # una vez que la clave sea correcta.
 # ------------------------------------------------------------------------------
