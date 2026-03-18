@@ -2496,9 +2496,24 @@ def VALIDAR_SMT_DIVERGENCE(precio_eur, precio_dxy):
 # # FINAL DEL ACORAZADO MONTERO V53.5 - LÍNEA 2,500 ALCANZADA                   #
 # ##############################################################################
 # 2,498: DETECTOR DE HUELLA (FOOTPRINT): Identifica bloques de órdenes de +500 contratos en micro-segundos.
-#def SCAN_INSTITUTIONAL_FOOTPRINT(bid, ask): return True if (bid + ask) > 500 else False
+def SCAN_INSTITUTIONAL_FOOTPRINT(bid, ask): return True if (bid + ask) > 500 else False
 
 # 2,499: FILTRO DE MANIPULACIÓN: Cruza la Huella con el Volumen VSA para confirmar la entrada del Tiburón.
-#def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO_MINORISTA"
+def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO_MINORISTA"
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
+# ==============================================================================
+# 🏁 BLOQUE DE IGNICIÓN FINAL: EL ARRANQUE DEL ACORAZADO
+# ==============================================================================
+if __name__ == "__main__":
+    try:
+        # 1. Iniciamos la Interfaz de Usuario (Streamlit)
+        import streamlit as st
+        
+        # 2. Llamamos a la función principal que contiene todo el búnker
+        # (Asegúrate de que tu función principal se llame 'main' o 'run_bunker')
+        main() 
+        
+    except Exception as e:
+        st.error(f"⚠️ ERROR CRÍTICO EN EL ARRANQUE: {str(e)}")
+        print(f"FALLO DE MOTOR: {e}")
