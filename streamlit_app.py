@@ -2510,13 +2510,13 @@ if __name__ == "__main__":
     try:
         # Intentamos arrancar la función principal
         # Asegúrate de que NO tenga espacios antes del nombre
-        EJECUTAR_SYSTEMA_MONTERO()
+        EJECUTAR_SISTEMA_MONTERO()
         
     except NameError:
         # SI FALLA EL NOMBRE, USAMOS EL PLAN B:
         # Buscamos la función en el listado global del programa
-        if 'EJECUTAR_SYSTEMA_MONTERO' in globals():
-            globals()['EJECUTAR_SYSTEMA_MONTERO']()
+        if 'EJECUTAR_SISTEMA_MONTERO' in globals():
+            globals()['EJECUTAR_SISTEMA_MONTERO']()
         else:
             st.error("❌ Error de Definición: La función 'EJECUTAR_SYSTEMA_MONTERO' no existe o está mal escrita (revisa la 'Y').")
     except Exception as e:
