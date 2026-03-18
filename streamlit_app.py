@@ -852,42 +852,32 @@ def DETECTAR_LIQUIDEZ_EXPUESTA(df):
 # LÍNEA 852: Definición de función
 def GENERAR_SENAL_SMC(df):
     try:
-        # LÍNEAS 855-856: Asignación corregida a 'df'
+        # 1. Calculo de Indicadores
         df['RSI_M'] = ta.rsi(df['Close'], length=14)
         df['ATR_M'] = ta.atr(df['High'], df['Low'], df['Close'], length=14)
 
-        # LÍNEA 860: Estado inicial
+        # 2. Inicializacion
         df['ACCION_MONTERO'] = "ESPERAR"
 
-        # ELIMINAR: Cualquier 'return df' entre la línea 860 y la 875
-
-        # LÍNEA 865: Inicio de iteración (Alineación: 4 espacios de sangría)
+        # 3. Logica de Disparo (TU CODIGO IMPORTANTE)
         for i in range(1, len(df)):
-            # Tu lógica de condicionales 'if' debe ir aquí
-            # con 8 espacios de sangría.
-            pass 
+            # CONDICION DE COMPRA: Tendencia Alcista + Retroceso a Bullish OB
+            if df['Market_Trend'].iloc[i] == "BULLISH":
+                # Si el precio esta cerca de un OB o FVG
+                if not np.isnan(df['FVG_Bottom'].iloc[i]):
+                    df.at[df.index[i], 'ACCION_MONTERO'] = "COMPRA (FVG)"
 
-        # LÍNEA FINAL DE LA FUNCIÓN: Único punto de retorno
+            # CONDICION DE VENTA: Tendencia Bajista + Retroceso a Bearish OB
+            elif df['Market_Trend'].iloc[i] == "BEARISH":
+                if not np.isnan(df['FVG_Top'].iloc[i]):
+                    df.at[df.index[i], 'ACCION_MONTERO'] = "VENTA (FVG)"
+
+        # 4. ENTREGA DE RESULTADOS (Unico return al final)
         return df
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error en el motor: {e}")
         return df
-
-    for i in range(1, len(df)):
-        # CONDICIÃ“N DE COMPRA: Tendencia Alcista + Retroceso a Bullish OB
-        if df['Market_Trend'].iloc[i] == "BULLISH":
-            # Si el precio estÃ¡ cerca de un OB o FVG
-            if not np.isnan(df['FVG_Bottom'].iloc[i]):
-                df.at[df.index[i], 'ACCION_MONTERO'] = "COMPRA (FVG)"
-                
-        # CONDICIÃ“N DE VENTA: Tendencia Bajista + Retroceso a Bearish OB
-        if df['Market_Trend'].iloc[i] == "BEARISH":
-            if not np.isnan(df['FVG_Top'].iloc[i]):
-                df.at[df.index[i], 'ACCION_MONTERO'] = "VENTA (FVG)"
-
-    return df
-
 # FINAL DEL BLOQUE 2 - MOTOR SMC COMPLETO (1,000 LÃNEAS TOTALES)
 # ==============================================================================
 # ------------------------------------------------------------------------------
