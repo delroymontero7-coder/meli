@@ -10,15 +10,38 @@ import os
 import time
 import math
 import json
-
-# ------------------------------------------------------------------------------
-# 1.0 CAPA DE PRESENTACIÓN INSTITUCIONAL (UI/UX KERNEL)
-# ------------------------------------------------------------------------------
+import streamlit as st
+import time
 st.set_page_config(
     page_title="🛡️ BÚNKER MONTERO v53.5",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# --- INICIO DE LA LLAVE MAESTRA ---
+if "autenticado" not in st.session_state:
+    st.session_state.autenticado = False
+
+if not st.session_state.autenticado:
+    st.markdown("<h1 style='text-align: center;'>⚓ ACORAZADO MONTERO</h1>", unsafe_allow_html=True)
+    password = st.text_input("PASSWORD DE MANDO:", type="password")
+    
+    if st.button("🔓 ACTIVAR SISTEMAS"):
+        if password == "Quantum2026":
+            st.session_state.autenticado = True
+            st.success("✅ CLAVE MAESTRA ACEPTADA")
+            time.sleep(1)
+            st.rerun()
+        else:
+            st.error("❌ ACCESO DENEGADO")
+  st.stop() # <--- ESTO ES LO MÁS IMPORTANTE: Detiene todo si no hay clave.
+# --- FIN DE LA LLAVE MAESTRA ---
+
+# De aquí para abajo, TODO tu código original se ejecutará solo 
+# una vez que la clave sea correcta.
+# ------------------------------------------------------------------------------
+# 1.0 CAPA DE PRESENTACIÓN INSTITUCIONAL (UI/UX KERNEL)
+# ------------------------------------------------------------------------------
 
 # Estilo Neón de Alta Densidad (CSS Expandido para Robustez)
 st.markdown("""
@@ -2496,50 +2519,17 @@ def SCAN_INSTITUTIONAL_FOOTPRINT(bid, ask): return True if (bid + ask) > 500 els
 def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO_MINORISTA"
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
-# ==============================================================================
-# 🛡️ ACCESO TOTAL AL ACORAZADO MONTERO - SEGURIDAD QUANTUM
-# ==============================================================================
-if __name__ == "__main__":
-    import streamlit as st
-    import time
 
-    # 1. ESTADO DE AUTENTICACIÓN
-    if "autenticado" not in st.session_state:
-        st.session_state.autenticado = False
 
-    # 2. PANTALLA DE LOGIN
-    if not st.session_state.autenticado:
-        st.markdown("<h1 style='text-align: center;'>⚓ ACORAZADO MONTERO</h1>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center;'>🔐 Acceso Nivel Quantum - Introduce tu Clave</p>", unsafe_allow_html=True)
-        
-        password = st.text_input("PASSWORD:", type="password")
-        
-        if st.button("🔓 ENTRAR AL SISTEMA"):
-            if password == "Quantum2026": 
-                st.session_state.autenticado = True
-                st.success("✅ ACCESO CONCEDIDO")
-                time.sleep(1)
-                st.rerun()
-            else:
-                st.error("❌ CLAVE INCORRECTA")
+# --- MOTOR DE AUTORREFLEXIÓN Y CIERRE ---
+if st.session_state.autenticado:
+    # 1. Espacio visual
+    st.divider()
+    
+    # 2. Información de sesión
+    st.caption("⚓ SISTEMA OPERATIVO | ACTUALIZACIÓN AUTOMÁTICA ACTIVA")
 
-    # 3. INTERIOR DEL BÚNKER (SISTEMA COMPLETO)
-    else:
-        try:
-            # Activamos tu motor real que vimos en la línea 73
-            db = BunkerDatabase() 
-            
-            # Mensaje de éxito en el puente de mando
-            st.sidebar.success("⚓ ACORAZADO OPERATIVO")
-            st.write("### 🚀 BIENVENIDO AL CENTRO DE CONTROL")
-            
-            # 4. MOTOR DE AUTO-REFRESH (60 SEGUNDOS)
-            time.sleep(60)
-            st.rerun()
-            
-        except Exception as e:
-            st.error(f"⚠️ Error en el Puente de Mando: {e}")
-            st.rerun()
-            
-        except Exception as e:
-            st.error(f"⚠️ Error en el Puente de Mando: {e}")
+    # 3. El ciclo de vida (60 segundos)
+    # Esto es lo que hace que el script se auto-ejecute siempre
+    time.sleep(60)
+    st.rerun()
