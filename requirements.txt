@@ -1,4 +1,4 @@
 streamlit
 pandas
 pandas_ta
-numpy
+
