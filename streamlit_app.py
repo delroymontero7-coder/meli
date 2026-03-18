@@ -10,39 +10,26 @@ import os
 import time
 import math
 import json
-import streamlit as st
-import time
-st.set_page_config(
-    page_title="🛡️ BÚNKER MONTERO v53.5",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 
-# --- INICIO DE LA LLAVE MAESTRA (Ajustado) ---
+# CONFIGURACIÓN (SIEMPRE LÍNEA 15)
+st.set_page_config(page_title="🛡️ BÚNKER MONTERO v53.5", layout="wide", initial_sidebar_state="expanded")
+
+# --- LLAVE MAESTRA ---
 if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
 
 if not st.session_state.autenticado:
-    # 1. Pantalla de Entrada limpia y centrada
-    st.markdown("<h1 style='text-align: center;'>⚓ ACORAZADO MONTERO</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: gray;'>Sistema de Mando Blindado | Inicie Sesión para Acceder</p>", unsafe_allow_html=True)
-    
-    # 2. El Cuadro de Contraseña
-    password = st.text_input("PASSWORD DE MANDO (Quantum LEVEL):", type="password")
-    
-    # 3. El Botón de Activación
+    st.markdown("<h1 style='text-align: center; color: #00ff41;'>⚓ ACORAZADO MONTERO</h1>", unsafe_allow_html=True)
+    # Importante: 'key' evita que la clave se borre al procesar el botón
+    password = st.text_input("PASSWORD DE MANDO:", type="password", key="main_pass")
     if st.button("🔓 ACTIVAR SISTEMAS"):
         if password == "Quantum2026":
             st.session_state.autenticado = True
-            st.success("✅ CLAVE MAESTRA ACEPTADA")
-            time.sleep(1) # Un segundo de margen
-            st.rerun() # Reinicia el script
+            st.rerun()
         else:
-            st.error("❌ CLAVE INCORRECTA | ACCESO DENEGADO")
-
-    # --- EL PORTERO (La Línea 37 corregida) ---
-    st.stop() # <--- IMPORTANTE: Está a la misma altura que el primer 'if not st.session_state'
-# --- FIN DE LA LLAVE MAESTRA (Ajustado) ---
+            st.error("❌ DENEGADO")
+    st.stop() # EL MURO DE SEGURIDAD
+# --- FIN LLAVE MAESTRA ---
 # De aquí para abajo, TODO tu código original se ejecutará solo 
 # una vez que la clave sea correcta.
 # ------------------------------------------------------------------------------
@@ -2526,16 +2513,29 @@ def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
 
+# ------------------------------------------------------------------------------
+# 20.0 CIERRE DE SISTEMAS Y MOTOR DE AUTORREFLEXIÓN
+# ------------------------------------------------------------------------------
 
-# --- MOTOR DE AUTORREFLEXIÓN Y CIERRE ---
-if st.session_state.autenticado:
-    # 1. Espacio visual
-    st.divider()
+# Solo llegamos aquí si pasamos el login de la línea 1
+if st.session_state.get("autenticado", False):
+    st.markdown("---")
     
-    # 2. Información de sesión
-    st.caption("⚓ SISTEMA OPERATIVO | ACTUALIZACIÓN AUTOMÁTICA ACTIVA")
+    # Pie de página con estatus
+    col_inf_1, col_inf_2 = st.columns([3, 1])
+    
+    with col_inf_1:
+        st.caption(f"🟢 SISTEMA OPERATIVO ACTIVO | MONTERO QUANTUM CORE | {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    
+    with col_inf_2:
+        # Botón para cerrar sesión
+        if st.button("🔒 BLOQUEAR BÚNKER", use_container_width=True):
+            st.session_state.autenticado = False
+            st.rerun()
 
-    # 3. El ciclo de vida (60 segundos)
-    # Esto es lo que hace que el script se auto-ejecute siempre
+    # MOTOR DE AUTORREFLEXIÓN (Refresh de 60 segundos)
+    # Este motor hace que el búnker se actualice solo sin intervención humana
     time.sleep(60)
     st.rerun()
+
+# --- FIN DEL ACORAZADO MONTERO v53.5 ---
