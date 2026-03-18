@@ -2519,7 +2519,7 @@ def EJECUTAR_SISTEMA_MONTERO():
     # NOTA: Aquí el código seguirá ejecutando el resto de tus 2,500 líneas
     # si están bien escritas debajo de este título.
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     try:
         import streamlit as st
         # Llamamos a la función con 'I' latina como la tienes arriba
