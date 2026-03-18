@@ -845,38 +845,32 @@ def DETECTAR_LIQUIDEZ_EXPUESTA(df):
             df.at[df.index[i], 'Liquidez_Techo'] = df['High'].iloc[i]
             
         # Equal Lows (Soporte de Liquidez)
-        if abs(df['Low'].iloc[i] - df['Low'].iloc[i-1]) < umbral_pip:
-            df.at[df.index[i], 'Liquidez_Suelo'] = df['Low'].iloc[i]
-            
-    return df
-# LÍNEA 852: Definición de función
+    df['Equal_Lows'] = equal_lows
+
+# --- COMIENZO DEL GENERADOR DE SENALES ---
 def GENERAR_SENAL_SMC(df):
     try:
         # 1. Calculo de Indicadores
         df['RSI_M'] = ta.rsi(df['Close'], length=14)
         df['ATR_M'] = ta.atr(df['High'], df['Low'], df['Close'], length=14)
-
-        # 2. Inicializacion
         df['ACCION_MONTERO'] = "ESPERAR"
 
-        # 3. Logica de Disparo (TU CODIGO IMPORTANTE)
+        # 2. Logica de Trading (Bucle)
         for i in range(1, len(df)):
-            # CONDICION DE COMPRA: Tendencia Alcista + Retroceso a Bullish OB
+            # Estrategia de Compra
             if df['Market_Trend'].iloc[i] == "BULLISH":
-                # Si el precio esta cerca de un OB o FVG
                 if not np.isnan(df['FVG_Bottom'].iloc[i]):
-                    df.at[df.index[i], 'ACCION_MONTERO'] = "COMPRA (FVG)"
-
-            # CONDICION DE VENTA: Tendencia Bajista + Retroceso a Bearish OB
+                    df.at[df.index[i], 'ACCION_MONTERO'] = "COMPRA"
+            
+            # Estrategia de Venta
             elif df['Market_Trend'].iloc[i] == "BEARISH":
                 if not np.isnan(df['FVG_Top'].iloc[i]):
-                    df.at[df.index[i], 'ACCION_MONTERO'] = "VENTA (FVG)"
+                    df.at[df.index[i], 'ACCION_MONTERO'] = "VENTA"
 
-        # 4. ENTREGA DE RESULTADOS (Unico return al final)
+        # UNICO PUNTO DE RETORNO AL FINAL
         return df
 
     except Exception as e:
-        print(f"Error en el motor: {e}")
         return df
 # FINAL DEL BLOQUE 2 - MOTOR SMC COMPLETO (1,000 LÃNEAS TOTALES)
 # ==============================================================================
