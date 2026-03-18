@@ -2513,28 +2513,15 @@ def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
 
-# ------------------------------------------------------------------------------
-# 20.0 CIERRE DE SISTEMAS Y MOTOR DE AUTORREFLEXIÓN
-# ------------------------------------------------------------------------------
-
-# Solo llegamos aquí si pasamos el login de la línea 1
+# --- MOTOR DE CIERRE (SIN AUTORREFRESCO TEMPORAL) ---
 if st.session_state.get("autenticado", False):
-    st.markdown("---")
+    st.sidebar.markdown("---")
+    if st.sidebar.button("🔒 CERRAR SESIÓN TOTAL"):
+        st.session_state.autenticado = False
+        st.rerun()
     
-    # Pie de página con estatus
-    col_inf_1, col_inf_2 = st.columns([3, 1])
-    
-    with col_inf_1:
-        st.caption(f"🟢 SISTEMA OPERATIVO ACTIVO | MONTERO QUANTUM CORE | {datetime.now().strftime('%Y-%m-%d %H:%M')}")
-    
-    with col_inf_2:
-        # Botón para cerrar sesión
-        if st.button("🔒 BLOQUEAR BÚNKER", use_container_width=True):
-            st.session_state.autenticado = False
-            st.rerun()
-
-    # MOTOR DE AUTORREFLEXIÓN (Refresh de 60 segundos)
-    # Este motor hace que el búnker se actualice solo sin intervención humana
+    st.write("✅ SISTEMA CARGADO COMPLETAMENTE")
+# --- FIN ---
     time.sleep(60)
     st.rerun()
 
