@@ -2496,9 +2496,9 @@ def VALIDAR_SMT_DIVERGENCE(precio_eur, precio_dxy):
 # # FINAL DEL ACORAZADO MONTERO V53.5 - LÍNEA 2,500 ALCANZADA                   #
 # ##############################################################################
 # 2,498: DETECTOR DE HUELLA (FOOTPRINT): Identifica bloques de órdenes de +500 contratos en micro-segundos.
-def SCAN_INSTITUTIONAL_FOOTPRINT(bid, ask): return True if (bid + ask) > 500 else False
+#def SCAN_INSTITUTIONAL_FOOTPRINT(bid, ask): return True if (bid + ask) > 500 else False
 
 # 2,499: FILTRO DE MANIPULACIÓN: Cruza la Huella con el Volumen VSA para confirmar la entrada del Tiburón.
-def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO_MINORISTA"
+#def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO_MINORISTA"
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
