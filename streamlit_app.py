@@ -2502,49 +2502,40 @@ def SCAN_INSTITUTIONAL_FOOTPRINT(bid, ask): return True if (bid + ask) > 500 els
 def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO_MINORISTA"
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
-
 # ==============================================================================
-# 🏁 CONEXIÓN FINAL CON YAHOO FINANCE Y AUTO-REFRESH
+# 🏁 CONEXIÓN FINAL CON YAHOO FINANCE - EL ACORAZADO
 # ==============================================================================
 
 def EJECUTAR_SISTEMA_MONTERO():
     import streamlit as st
-    import yfinance as yf # Importamos Yahoo Finance
+    import yfinance as yf
     from datetime import datetime
     
-    # 1. Título y Estado
+    # 1. Título e información de estado
     st.title("⚓ MONTERO v53.5 | EL ACORAZADO INSTITUCIONAL")
-    st.info(f"🔄 Última actualización: {datetime.now().strftime('%H:%M:%S')}")
+    st.info(f"🔄 Radar operativo - Última actualización: {datetime.now().strftime('%H:%M:%S')}")
 
-    # 2. Bloque de Datos (Yahoo Finance)
     try:
-        # Aquí puedes cambiar 'BTC-USD' por tu par favorito
-        with st.spinner('⚓ Cargando datos de Yahoo Finance...'):
-            data = yf.download(tickers='BTC-USD', period='1d', interval='5m')
+        # 2. Descarga de datos automática
+        with st.spinner('⚓ Descargando datos de mercado...'):
+            # Usamos BTC-USD por defecto, puedes cambiarlo luego en el menú
+            df_mercado = yf.download(tickers='BTC-USD', period='1d', interval='5m')
             
-        if not data.empty:
-            st.success("✅ Datos de Mercado Recibidos")
-            # --- AQUÍ EJECUTAMOS EL RESTO DE TU LÓGICA SMC ---
-            # (El sistema usará 'data' para calcular los Order Blocks)
+        if not df_mercado.empty:
+            st.success("✅ SEÑAL RECIBIDA: Yahoo Finance Conectado")
+            # AQUÍ ES DONDE TUS 2,500 LÍNEAS DE SMC ENTRAN EN ACCIÓN
+            # El sistema usará 'df_mercado' para buscar los Order Blocks
         else:
-            st.warning("⚠️ Yahoo Finance no devolvió datos. Revisa la conexión.")
+            st.warning("⚠️ Sin señal: Yahoo Finance no devolvió datos.")
             
     except Exception as e:
-        st.error(f"❌ Error de conexión: {e}")
+        st.error(f"❌ Error de Radar: {e}")
 
-# --- ARRANQUE CON AUTO-REFRESH CADA 60 SEGUNDOS ---
+# --- ARRANQUE DEL SISTEMA ---
 if __name__ == "__main__":
-    import streamlit as st
-    
-    # Esto es lo que hacía que se moviera solo antes:
-    # st.empty() ayuda a limpiar la pantalla en cada ciclo
-    EJECUTAR_SISTEMA_MONTERO()
-    
-    # Truco de refresco simple para Streamlit
-    # import time
-    # time.sleep(60)
-    # st.rerun()
+    try:
         EJECUTAR_SISTEMA_MONTERO()
     except Exception as e:
         import streamlit as st
-        st.error(f"⚠️ Error crítico al lanzar el sistema: {e}")
+        st.error(f"⚠️ Error al lanzar el sistema: {e}")
+
