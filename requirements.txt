@@ -2,6 +2,3 @@ streamlit
 pandas
 pandas_ta
 numpy
-datetime
-requests
-git+https://github.com/monstermonster/tvdatafeed.git
