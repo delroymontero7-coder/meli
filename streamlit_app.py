@@ -2499,7 +2499,6 @@ def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO
 # ==============================================================================
 # 🛡️ ACCESO TOTAL AL ACORAZADO MONTERO - SEGURIDAD QUANTUM
 # ==============================================================================
-
 if __name__ == "__main__":
     import streamlit as st
     import time
@@ -2508,16 +2507,14 @@ if __name__ == "__main__":
     if "autenticado" not in st.session_state:
         st.session_state.autenticado = False
 
-    # 2. PANTALLA DE LOGIN (CENTRAL)
+    # 2. PANTALLA DE LOGIN
     if not st.session_state.autenticado:
         st.markdown("<h1 style='text-align: center;'>⚓ ACORAZADO MONTERO</h1>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center;'>🔐 Introduce la Clave de Mando para acceder al Búnker</p>", unsafe_allow_html=True)
         
-        # El campo de la contraseña
         password = st.text_input("PASSWORD:", type="password", help="Clave de seguridad Quantum")
         
         if st.button("🔓 ENTRAR AL SISTEMA"):
-            # Aquí está tu clave: Quantum2026
             if password == "Quantum2026": 
                 st.session_state.autenticado = True
                 st.success("✅ ACCESO CONCEDIDO. Cargando Academia y Noticias...")
@@ -2525,25 +2522,15 @@ if __name__ == "__main__":
                 st.rerun()
             else:
                 st.error("❌ CLAVE INCORRECTA. El Acorazado permanece bloqueado.")
-    if password == "Quantum2026":
-                st.session_state.autenticado = True
-                st.success("✅ ACCESO CONCEDIDO. Cargando Academia...")
-                time.sleep(1)
-                st.rerun()
-            else:
-                st.error("❌ CLAVE INCORRECTA")
 
     # 3. INTERIOR DEL BÚNKER (SISTEMA COMPLETO)
     else:
         try:
-            # Esta es la llave que vimos en la línea 73
+            # Esta es la llave que activa tu interfaz de la línea 73
             mostrar_interfaz_acorazado() 
             
             # Motor de refresco (60 segundos)
             time.sleep(60)
-            st.rerun()
-        except Exception as e:
-            st.error(f"⚠️ Error en el Puente de Mando: {e}")
             st.rerun()
             
         except Exception as e:
