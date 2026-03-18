@@ -12,6 +12,7 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from datetime import datetime, timedelta
+import pandas_ta as ta
 import sqlite3
 import os
 import time
@@ -19,7 +20,7 @@ import math
 import json
 
 # CONFIGURACIÃ“N (SIEMPRE LÃNEA 15)
-st.set_page_config(page_title="ðŸ›¡ï¸ BÃšNKER MONTERO v53.5", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="› MONTERO v53.5", layout="wide", initial_sidebar_state="expanded")
 
 # --- LLAVE MAESTRA ---
 if "autenticado" not in st.session_state:
@@ -852,8 +853,8 @@ def DETECTAR_LIQUIDEZ_EXPUESTA(df):
 # ------------------------------------------------------------------------------
 # 20.0 REFINAMIENTO DE SEÃ‘ALES DE ENTRADA (CONFIRMATION KERNEL)
 # ------------------------------------------------------------------------------
-def GENERAR_SEÃ‘AL_SMC(df):
-    """
+    data['RSI_M'] = ta.rsi(data['Close'], length=14)
+    data['ATR_M'] = ta.atr(data['High'], data['Low'], data['Close'], length=14)
     Cruza Fractales + BOS + Order Blocks para dar el disparo final.
     LÃ³gica de 80 lÃ­neas de validaciÃ³n cruzada.
     """
