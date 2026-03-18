@@ -2503,34 +2503,42 @@ if __name__ == "__main__":
     import streamlit as st
     import time
 
-    # 1. Estado de autenticación
+    # 1. ESTADO DE AUTENTICACIÓN
     if "autenticado" not in st.session_state:
         st.session_state.autenticado = False
 
     # 2. PANTALLA DE LOGIN
     if not st.session_state.autenticado:
         st.markdown("<h1 style='text-align: center;'>⚓ ACORAZADO MONTERO</h1>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center;'>🔐 Introduce la Clave de Mando para acceder al Búnker</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center;'>🔐 Acceso Nivel Quantum - Introduce tu Clave</p>", unsafe_allow_html=True)
         
-        password = st.text_input("PASSWORD:", type="password", help="Clave de seguridad Quantum")
+        password = st.text_input("PASSWORD:", type="password")
         
         if st.button("🔓 ENTRAR AL SISTEMA"):
             if password == "Quantum2026": 
                 st.session_state.autenticado = True
-                st.success("✅ ACCESO CONCEDIDO. Cargando Academia y Noticias...")
+                st.success("✅ ACCESO CONCEDIDO")
                 time.sleep(1)
                 st.rerun()
             else:
-                st.error("❌ CLAVE INCORRECTA. El Acorazado permanece bloqueado.")
+                st.error("❌ CLAVE INCORRECTA")
 
     # 3. INTERIOR DEL BÚNKER (SISTEMA COMPLETO)
     else:
         try:
-            # Esta es la llave que activa tu interfaz de la línea 73
-            mostrar_interfaz_acorazado() 
+            # Activamos tu motor real que vimos en la línea 73
+            db = BunkerDatabase() 
             
-            # Motor de refresco (60 segundos)
+            # Mensaje de éxito en el puente de mando
+            st.sidebar.success("⚓ ACORAZADO OPERATIVO")
+            st.write("### 🚀 BIENVENIDO AL CENTRO DE CONTROL")
+            
+            # 4. MOTOR DE AUTO-REFRESH (60 SEGUNDOS)
             time.sleep(60)
+            st.rerun()
+            
+        except Exception as e:
+            st.error(f"⚠️ Error en el Puente de Mando: {e}")
             st.rerun()
             
         except Exception as e:
