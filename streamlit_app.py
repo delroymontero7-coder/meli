@@ -2503,44 +2503,45 @@ def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
 # ==============================================================================
-# 🛡️ LOGIN DE PANTALLA COMPLETA + AUTO-REFRESH MONTERO
+# 🛡️ ACCESO TOTAL AL ACORAZADO MONTERO - SEGURIDAD QUANTUM
 # ==============================================================================
 
 if __name__ == "__main__":
     import streamlit as st
     import time
 
-    # 1. Configuración de página limpia
-    # st.set_page_config(page_title="ACORAZADO MONTERO", layout="centered")
-
-    # 2. El "Portero": Si no hay contraseña, no pasa nadie
+    # 1. Estado de autenticación
     if "autenticado" not in st.session_state:
         st.session_state.autenticado = False
 
+    # 2. PANTALLA DE LOGIN (CENTRAL)
     if not st.session_state.autenticado:
-        st.title("⚓ ACCESO AL ACORAZADO MONTERO")
-        # Aquí es donde pones tu clave
-        password = st.text_input("Introduce la Clave de Mando:", type="password")
+        st.markdown("<h1 style='text-align: center;'>⚓ ACORAZADO MONTERO</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center;'>🔐 Introduce la Clave de Mando para acceder al Búnker</p>", unsafe_allow_html=True)
         
-        if st.button("ENTRAR AL BÚNKER"):
-            if password == "TU_CLAVE_AQUI": # <--- CAMBIA ESTO POR TU CLAVE REAL
+        # El campo de la contraseña
+        password = st.text_input("PASSWORD:", type="password", help="Clave de seguridad Quantum")
+        
+        if st.button("🔓 ENTRAR AL SISTEMA"):
+            # Aquí está tu clave: Quantum2026
+            if password == "Quantum2026": 
                 st.session_state.autenticado = True
-                st.success("Acceso concedido. Iniciando sistemas...")
+                st.success("✅ ACCESO CONCEDIDO. Cargando Academia y Noticias...")
                 time.sleep(1)
                 st.rerun()
             else:
-                st.error("❌ Clave incorrecta. Acceso denegado.")
+                st.error("❌ CLAVE INCORRECTA. El Acorazado permanece bloqueado.")
     
     else:
-        # 3. SI YA ESTÁ AUTENTICADO: Lanzamos todo lo demás
+        # 3. INTERIOR DEL BÚNKER (SISTEMA COMPLETO)
         try:
-            # Esto activa tu Academia, Noticias y el Trading
+            # Lanza todas tus funciones de la línea 73 (Academia, Noticias, Trading)
             EJECUTAR_SISTEMA_MONTERO()
 
-            # 4. EL MOTOR DEL AUTO-REFRESH (Solo cuando ya estás dentro)
-            # Refresca cada 60 segundos para las velas y noticias
+            # 4. MOTOR DE AUTO-REFRESH (60 SEGUNDOS)
+            # Esto mantiene el radar y las noticias moviéndose solos
             time.sleep(60)
             st.rerun()
             
         except Exception as e:
-            st.error(f"⚠️ Error en el interior del búnker: {e}")
+            st.error(f"⚠️ Error en el Puente de Mando: {e}")
