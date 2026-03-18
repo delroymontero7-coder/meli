@@ -2525,26 +2525,22 @@ if __name__ == "__main__":
                 st.rerun()
             else:
                 st.error("❌ CLAVE INCORRECTA. El Acorazado permanece bloqueado.")
-    
     else:
         # 3. INTERIOR DEL BÚNKER (SISTEMA COMPLETO)
         try:
-            # Lanza todas tus funciones de la línea 73 (Academia, Noticias, Trading)
-            EJECUTAR_SISTEMA_MONTERO()
-
+            # Despertamos tu base de datos y la interfaz de la línea 73
+            mostrar_interfaz_acorazado() 
+            
+            # Un pequeño mensaje de confirmación en la barra lateral
+            st.sidebar.success("⚓ ACORAZADO OPERATIVO")
+            
             # 4. MOTOR DE AUTO-REFRESH (60 SEGUNDOS)
-            # Esto mantiene el radar y las noticias moviéndose solos
             time.sleep(60)
             st.rerun()
-          # --- AQUÍ ESTÁ TU LLAVE MAESTRA REAL ---
-        # Llamamos a la función que define todo tu menú y gráficos
-        try:
-            mostrar_interfaz_acorazado() 
-        except NameError:
-            st.error("⚠️ No se encontró la función 'mostrar_interfaz_acorazado'. Verifica el nombre en la línea 73.")
-
-        # 4. MOTOR DE AUTO-REFRESH (Cada 60 segundos)
-        time.sleep(60)
+            
+        except Exception as e:
+            st.error(f"⚠️ Error al conectar con el Puente de Mando: {e}")
+  
         st.rerun()
         
     except Exception as e:
