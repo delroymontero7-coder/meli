@@ -2502,32 +2502,7 @@ def SCAN_INSTITUTIONAL_FOOTPRINT(bid, ask): return True if (bid + ask) > 500 els
 def VALIDAR_HUELLA_SMC(vol): return "HUELLA_CONFIRMADA" if vol > 1.5 else "RUIDO_MINORISTA"
 
 # 2,500: ### CIERRE TOTAL DEL ACORAZADO MONTERO: SISTEMA SELLADO, BLINDADO Y OPERATIVO AL 100% ###
-# ==============================================================================
-# 🏁 CONEXIÓN FINAL DEL ACORAZADO MONTERO
-# ==============================================================================
 
-def EJECUTAR_SISTEMA_MONTERO():
-    import streamlit as st
-    
-    # 1. Prueba de vida inmediata
-    st.write("# 📡 BUSCANDO SEÑALES DEL ACORAZADO...")
-    st.info("Iniciando motores institucionales... Por favor, espera.")
-    
-    # 2. Tu título original
-    st.title("⚓ MONTERO v53.5 | EL ACORAZADO INSTITUCIONAL")
-    
-    # NOTA: Aquí el código seguirá ejecutando el resto de tus 2,500 líneas
-    # si están bien escritas debajo de este título.
-
-if _name_ == "_main_":
-    try:
-        import streamlit as st
-        # Llamamos a la función con 'I' latina como la tienes arriba
-        EJECUTAR_SISTEMA_MONTERO()
-    except Exception as e:
-        import streamlit as st
-        st.error(f"⚠️ Error crítico al lanzar el sistema: {e}")
-Has enviado
 # ==============================================================================
 # 🏁 CONEXIÓN FINAL CON YAHOO FINANCE Y AUTO-REFRESH
 # ==============================================================================
